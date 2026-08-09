@@ -1,0 +1,39 @@
+{
+  "hooks": {
+    "SessionStart": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "D=\"${CLAUDE_PROJECT_DIR:-$PWD}\"; [ -f \"$D/.claude/caveman_renewal.off\" ] || [ -f \"$D/.claude/caveman.off\" ] && exit 0; F=\"$D/.claude/skills/caveman_renewal/SKILL.md\"; [ -f \"$F\" ] || exit 0; awk 'BEGIN{n=0} /^---$/{n++; next} n>=2' \"$F\" | jq -Rs '{hookSpecificOutput:{hookEventName:\"SessionStart\",additionalContext:(\"<caveman-mode>\\n이번 세션 전체에 아래 규칙을 적용한다. 해제 조건은 규칙의 지속성 항목을 따른다.\\n\" + . + \"\\n</caveman-mode>\")},suppressOutput:true}'",
+            "timeout": 10,
+            "statusMessage": "caveman_renewal 규칙 주입 중"
+          }
+        ]
+      }
+    ],
+    "PostCompact": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "D=\"${CLAUDE_PROJECT_DIR:-$PWD}\"; [ -f \"$D/.claude/caveman_renewal.off\" ] || [ -f \"$D/.claude/caveman.off\" ] && exit 0; F=\"$D/.claude/skills/caveman_renewal/SKILL.md\"; [ -f \"$F\" ] || exit 0; awk 'BEGIN{n=0} /^---$/{n++; next} n>=2' \"$F\" | jq -Rs '{hookSpecificOutput:{hookEventName:\"PostCompact\",additionalContext:(\"<caveman-mode>\\n압축 이후에도 아래 규칙을 계속 적용한다.\\n\" + . + \"\\n</caveman-mode>\")},suppressOutput:true}'",
+            "timeout": 10,
+            "statusMessage": "caveman_renewal 규칙 재주입 중"
+          }
+        ]
+      }
+    ]
+  },
+  "extraKnownMarketplaces": {
+    "superpowers-dev": {
+      "source": {
+        "source": "github",
+        "repo": "obra/superpowers"
+      }
+    }
+  },
+  "enabledPlugins": {
+    "superpowers@superpowers-dev": true
+  }
+}
