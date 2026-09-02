@@ -4,7 +4,7 @@
 
 A curated collection of Claude Code skills, installable system-wide with a single command.
 
-[![skills](https://img.shields.io/badge/skills-14-8A2BE2?style=flat)](.claude/skills) [![contributors](https://img.shields.io/github/contributors/ash-hun/awesome_skills?style=flat&logo=github&color=blue)](https://github.com/ash-hun/awesome_skills/graphs/contributors) [![forks](https://img.shields.io/github/forks/ash-hun/awesome_skills?style=flat&logo=github&color=blue)](https://github.com/ash-hun/awesome_skills/network/members) [![stars](https://img.shields.io/github/stars/ash-hun/awesome_skills?style=flat&logo=github&color=yellow)](https://github.com/ash-hun/awesome_skills/stargazers) [![issues](https://img.shields.io/github/issues/ash-hun/awesome_skills?style=flat&logo=github&color=red)](https://github.com/ash-hun/awesome_skills/issues) [![last commit](https://img.shields.io/github/last-commit/ash-hun/awesome_skills?style=flat&logo=github)](https://github.com/ash-hun/awesome_skills/commits/main) [![license](https://img.shields.io/github/license/ash-hun/awesome_skills?style=flat&color=green)](LICENSE)
+[![skills](https://img.shields.io/badge/skills-3-8A2BE2?style=flat)](.claude/skills) [![contributors](https://img.shields.io/github/contributors/ash-hun/awesome_skills?style=flat&logo=github&color=blue)](https://github.com/ash-hun/awesome_skills/graphs/contributors) [![forks](https://img.shields.io/github/forks/ash-hun/awesome_skills?style=flat&logo=github&color=blue)](https://github.com/ash-hun/awesome_skills/network/members) [![stars](https://img.shields.io/github/stars/ash-hun/awesome_skills?style=flat&logo=github&color=yellow)](https://github.com/ash-hun/awesome_skills/stargazers) [![issues](https://img.shields.io/github/issues/ash-hun/awesome_skills?style=flat&logo=github&color=red)](https://github.com/ash-hun/awesome_skills/issues) [![last commit](https://img.shields.io/github/last-commit/ash-hun/awesome_skills?style=flat&logo=github)](https://github.com/ash-hun/awesome_skills/commits/main) [![license](https://img.shields.io/github/license/ash-hun/awesome_skills?style=flat&color=green)](LICENSE)
 
 </div>
 
@@ -14,7 +14,7 @@ A curated collection of Claude Code skills, installable system-wide with a singl
 
 [Claude Code](https://claude.com/claude-code)에사 유용하게 사용할 수 있는 **Custom Skill** 을 모아둔 저장소다. 설치하면 어느 디렉토리에서 Claude Code를 열든 모든 스킬이 로드된다.
 
-모든 스킬은 `.claude/skills/<name>/SKILL.md` 단일 파일로 self-contained 하게 작성되어 있다. 추가 스크립트, 훅, 런타임 의존성 없음.
+각 스킬은 `SKILL.md` 를 라우터로 두고 상세 절차를 `references/` 에 둔다. 트리거될 때 항상 읽히는 건 `SKILL.md` 뿐이라 컨텍스트를 적게 쓰고, 필요한 참조만 그때 읽는다. 부속 파일은 전부 스킬 디렉토리 안에 있어 저장소 바깥 경로에 의존하지 않는다.
 
 **요구사항** — macOS 또는 Linux, `git`, `bash`. Claude Code가 이미 설치되어 있어야 한다.
 
@@ -116,76 +116,88 @@ awesome-skills brief on
 <!-- skills:start -->
 ## 설치된 스킬
 
+세 개다. 각각이 여러 모드를 가지며, 모드는 인자로 고르거나 대화 문맥에서 자동으로 잡힌다.
+
 | 스킬 | 호출 | 한 줄 요약 | 출처 |
 |---|---|---|---|
-| [`skills-readme`](.claude/skills/skills-readme/SKILL.md) | `/skills-readme [README 경로]` | 설치된 스킬을 읽어 이 README의 카탈로그 구간을 갱신 | 이 저장소 |
-| [`ponytail`](.claude/skills/ponytail/SKILL.md) | `/ponytail [lite\|full\|ultra]` | 게으른 시니어 개발자 모드. 동작하는 가장 단순한 해법을 강제 | [ponytail](https://github.com/DietrichGebert/ponytail) |
-| [`ponytail-review`](.claude/skills/ponytail-review/SKILL.md) | `/ponytail-review` | diff 대상 과잉설계 리뷰. 지울 것만 찾는다 | ↑ |
-| [`ponytail-audit`](.claude/skills/ponytail-audit/SKILL.md) | `/ponytail-audit` | 레포 전체 과잉설계 감사. 큰 삭제부터 랭킹 | ↑ |
-| [`ponytail-debt`](.claude/skills/ponytail-debt/SKILL.md) | `/ponytail-debt` | `ponytail:` 주석을 부채 장부로 수집 | ↑ |
-| [`ponytail-gain`](.claude/skills/ponytail-gain/SKILL.md) | `/ponytail-gain` | 벤치마크 기반 효과 스코어보드 | ↑ |
-| [`ponytail-help`](.claude/skills/ponytail-help/SKILL.md) | `/ponytail-help` | ponytail 전체 레퍼런스 카드 | ↑ |
-| [`grilling`](.claude/skills/grilling/SKILL.md) | 트리거 문구 / `/grilling` | 계획·설계를 라운드 단위 질문으로 압박 검증 | [mattpocock/skills](https://github.com/mattpocock/skills) |
-| [`grill-me`](.claude/skills/grill-me/SKILL.md) | `/grill-me` | `grilling` 세션을 여는 얇은 래퍼 | ↑ |
-| [`handoff`](.claude/skills/handoff/SKILL.md) | `/handoff [다음 세션 목적]` | 현재 대화를 인수인계 문서로 압축 | ↑ |
+| [`common`](.claude/skills/common/SKILL.md) | `/common [create\|eval\|describe\|docs]` | 스킬 자체를 만들고 검증하고 문서화하는 메타 스킬 | [anthropics/skills](https://github.com/anthropics/skills) + 이 저장소 |
+| [`humanism_talk`](.claude/skills/humanism_talk/SKILL.md) | `/humanism_talk [brief\|grill\|off]` | 대화 규율. 응답을 압축하고, 계획을 라운드로 캐묻는다 | [JuliusBrussee/caveman](https://github.com/JuliusBrussee/caveman) + [mattpocock/skills](https://github.com/mattpocock/skills) |
+| [`develop_rule`](.claude/skills/develop_rule/SKILL.md) | `/develop_rule [lite\|full\|ultra\|review\|audit\|debt\|spec\|handoff]` | 재현 가능한 개발. 최소로 짓고, 두 번 돌려도 같게, 문서는 코드에서 유도 | [DietrichGebert/ponytail](https://github.com/DietrichGebert/ponytail) + [mattpocock/skills](https://github.com/mattpocock/skills) + 이 저장소 |
+
+세 스킬 모두 `SKILL.md` 를 라우터로 두고 상세 절차는 `references/` 에 둔다. 트리거될 때 항상 읽히는 건 `SKILL.md` 뿐이고, 나머지는 해당 모드에 들어갈 때만 읽는다.
 
 ---
 
 ## 스킬 상세
 
-### 저장소 관리
+### `common` — 스킬 라이프사이클
 
-#### `skills-readme`
-`.claude/skills/*/SKILL.md`를 **본문까지** 읽어 이 README의 카탈로그 구간을 다시 쓴다. frontmatter의 `description`은 모델용 트리거 문구지 사람용 설명이 아니므로 그대로 베끼지 않는다.
+만들고 → 검증하고 → 이름표를 다듬고 → 문서에 올리는 네 단계를 한 흐름으로 잡는다. 도구가 따로 놀면 만들어놓고 검증을 건너뛰거나, 고쳐놓고 카탈로그를 안 고쳐 문서가 썩기 때문이다.
 
-교체 범위는 `<!-- skills:start -->` ~ `<!-- skills:end -->` 사이뿐이라, 바깥의 손으로 쓴 부분은 반복 실행해도 살아남는다. 출처·라이선스는 LICENSE → settings.json의 curl 이력 → GitHub API 순으로 확인하고, 끝내 모르면 추측 대신 빈칸으로 두고 보고한다. 훅/플러그인 런타임을 전제로 쓰인 스킬 문서는 부속 파일 설치 여부를 확인해 안 되는 기능에 경고를 붙인다.
+| 모드 | 하는 일 |
+|---|---|
+| `create` | 의도 파악 → 인터뷰 → SKILL.md 초안 → 테스트 케이스 작성 |
+| `eval` | 테스트 실행 → 채점 → 브라우저 뷰어로 사람 리뷰 → 개선 루프 |
+| `describe` | 트리거 eval 쿼리 20개를 만들어 `description` 을 최적화 |
+| `docs` | 이 README 의 카탈로그 구간을 갱신 |
 
-### ponytail 계열 — 과잉설계 방지
+각 모드는 끝날 때 다음 단계를 **제안**한다. 강요하지 않는다 — "그냥 대충 만들어줘"라고 하면 그 말을 따른다. 다만 스킬 파일을 건드린 세션에서 README 가 옛날 내용이면 그 사실은 반드시 알린다.
 
-#### `ponytail`
-"게으름 = 비효율이 아니라 효율"이라는 전제의 상시 모드. 아래 **사다리**를 위에서부터 타고 내려가다 처음 성립하는 칸에서 멈춘다.
+문서를 쓸 때 `description` 을 그대로 베끼지 않는다. 그건 모델용 트리거 문구지 사람용 설명이 아니라서, 카탈로그를 만들 때는 모든 `SKILL.md` 의 **본문까지** 읽는다. 출처·라이선스는 추측하지 않고 LICENSE → frontmatter → GitHub API 순으로 확인하며, 끝내 모르면 빈칸으로 두고 보고한다.
 
-1. 애초에 필요한가? (YAGNI)
-2. 이 코드베이스에 이미 있나? → 재사용
-3. 표준 라이브러리가 하나?
-4. 플랫폼 네이티브 기능으로 되나?
-5. 이미 설치된 의존성으로 되나?
-6. 한 줄로 되나?
-7. 그때서야 최소 구현
+범위 밖: 스킬이 아닌 일반 코드·문서 작성. `.skill` 패키징은 하지 않는다 — 이 저장소는 전역 설치 방식이라 커밋·푸시가 그 역할을 한다.
 
-강도는 3단계 — `lite`(대안만 제시), `full`(기본, 사다리 강제), `ultra`(YAGNI 극단주의).
+부속: `references/` 5개, `agents/` 3개(채점·블라인드 비교·분석), `scripts/` 8개, `eval-viewer/`.
 
-명시적 안전장치도 있다: 입력 검증·에러 처리·보안·접근성·사용자가 명시 요청한 것은 절대 단순화하지 않고, **"문제 이해"에는 게으르지 않는다**(작은 diff를 위해 파악을 건너뛰는 건 금지). 의도적으로 감수한 한계는 `ponytail:` 주석으로 한계와 업그레이드 조건을 남긴다 — 이게 `ponytail-debt`의 입력이 된다.
+### `humanism_talk` — 대화 규율
 
-비활성화: `"stop ponytail"` 또는 `"normal mode"`.
+말할 때와 물을 때를 같은 원칙으로 다룬다. **말은 줄이고, 구조는 드러내고, 추측은 질문으로 바꾼다.**
 
-#### `ponytail-review`
-diff 한정 리뷰. 정확성·보안·성능은 **범위 밖**(일반 리뷰로 라우팅)이고 복잡도만 사냥한다.
+**`brief`** (기본, 지속 모드) — 관사·필러·인사치레·헤지를 걷어내고, 실질적인 지시문은 실행 *전에* 세 요소로 분해해 보여준다.
 
-발견 1건 = 1줄, `L<line>: <tag> <무엇>. <대체안>.` 형식. 태그는 `delete:` / `stdlib:` / `native:` / `yagni:` / `shrink:`. 마지막에 `net: -N lines possible.`로 마감하고, 자를 게 없으면 `Lean already. Ship.`
+- **목표** — 그 요청이 이루려는 최종 상태. 표면 요청을 그대로 베끼지 않는다.
+- **인과** — 맥락 → 원인 → 결과. 확인된 사실과 추정을 구분하고, 근거가 없으면 "미확인"이라 쓴다.
+- **액션** — 동사로 시작하는 행동 목록. 사용자 몫은 `[사용자]` 표시.
 
-#### `ponytail-audit`
-`ponytail-review`의 레포 전체 버전. diff 대신 트리 전체를 훑고 삭제량 큰 순으로 랭킹. 단발 리포트이며 수정은 적용하지 않는다.
+실행이 끝나면 같은 라벨로 닫는다. 인과는 가설에서 실측으로 갱신되고, 액션은 남은 것만 남는다. 한 문장으로 끝나는 질문에는 3요소를 붙이지 않는다 — `"12개."` 로 끝낸다.
 
-#### `ponytail-debt`
-`grep -rnE '(#|//) ?ponytail:' .`로 남겨둔 shortcut 주석을 수집해 파일별 장부로 정리. 업그레이드 트리거가 없는 항목은 `no-trigger`로 표시 — 조용히 썩는 부채를 드러내는 게 목적. 요청하면 `PONYTAIL-DEBT.md`로 저장한다.
+압축이 의미를 뒤집을 수 있는 것은 절대 건드리지 않는다: 부정어, 숫자·단위·버전, 코드와 에러 문자열, 사용자의 언어, 한국어 조사. 보안 경고와 비가역 작업 확인에서는 압축을 풀되 3요소는 유지한다. 채팅 밖으로 나가는 텍스트(커밋 메시지, 문서, PR 본문)에는 아예 적용하지 않는다.
 
-#### `ponytail-gain`
-공개 벤치마크 중앙값(5개 태스크 × 3개 모델) 스코어보드. **레포별 절감치는 절대 출력하지 않는다** — 안 쓴 코드에는 비교 기준선이 없기 때문. 실제 레포 수치가 필요하면 `ponytail-debt`/`ponytail-audit`로 유도한다.
+**`grill`** (단발) — 계획·설계를 design tree 로 매핑하고, 선행 결정이 끝나 지금 물을 수 있는 질문들(frontier)을 한 라운드에 모아 묻는다. 질문마다 번호와 추천 답안이 붙어 사용자는 뒤집기만 하면 된다. 사실 확인은 서브에이전트가 하고 결정만 사용자에게 남긴다. frontier 가 비고 사용자가 합의를 확인하기 전까지 실행하지 않는다.
 
-#### `ponytail-help`
-모드·스킬·명령 요약 카드. ⚠️ 이 카드 안의 **"Configure Default Mode"(`PONYTAIL_DEFAULT_MODE`, `~/.config/ponytail/config.json`)와 "Update"(`/plugin` 마켓플레이스) 섹션은 이 저장소에 적용되지 않는다.** 해당 기능은 업스트림의 훅/플러그인 런타임이 필요한데, 여기는 SKILL.md만 설치한 구성이다. 세션 자동 활성화도 없으니 `/ponytail`로 직접 켜야 한다.
+두 모드는 이어져 있다. `brief` 의 인과에 "미확인"이 쌓이면 그게 곧 `grill` 의 질문 후보다.
 
-### 사고 정리 / 세션 관리
+해제: `/humanism_talk off`, `"stop caveman"`, `"normal mode"`. 프로젝트별로 끄려면 `<project>/.claude/humanism_talk.off` 파일을 만든다.
 
-#### `grilling`
-계획·결정·아이디어를 **design tree**로 매핑해 라운드 단위로 심문한다. 선행 결정이 끝나 지금 물을 수 있는 질문들(= frontier)을 한 라운드에 모아 번호 + 추천 답안과 함께 제시하고 답을 기다린다. 답이 트리를 갱신하면 frontier를 다시 계산해 다음 라운드로. **사실 확인은 에이전트 몫**(서브에이전트로 조회), **결정은 사용자 몫**. frontier가 비면 종료하며, 사용자가 합의를 확인하기 전엔 실행하지 않는다.
+### `develop_rule` — 재현 가능한 개발
 
-#### `grill-me`
-`/grilling`을 실행하는 한 줄짜리 래퍼. `disable-model-invocation: true`라 명시 호출 전용.
+**같은 입력이면 같은 결과가 나와야 한다.** 이걸 세 축으로 강제한다.
 
-#### `handoff`
-현재 대화를 새 에이전트가 이어받을 수 있는 인수인계 문서로 압축한다. **OS 임시 디렉토리에 저장**(워크스페이스 오염 방지), "suggested skills" 섹션 포함, 스펙·플랜·커밋·diff 등 기존 산출물은 중복 서술 대신 경로/URL로 참조, API 키·비밀번호·PII는 마스킹. 인자를 주면 다음 세션의 목적에 맞춰 문서를 조정한다. 역시 명시 호출 전용.
+- **최소** — 안 지은 코드가 가장 재현 가능하다.
+- **수렴** — 지은 것은 두 번 실행해도 같은 상태로 간다.
+- **투영** — 문서는 코드에서 유도한다. 재생성해도 diff 가 없다.
+
+지속 모드는 사다리를 강제한다. 처음 성립하는 칸에서 멈춘다: ① 애초에 필요한가(YAGNI) → ② 이미 코드베이스에 있나 → ③ 표준 라이브러리 → ④ 플랫폼 네이티브 → ⑤ 이미 설치된 의존성 → ⑥ 한 줄 → ⑦ 최소 구현. 강도는 `lite` / `full`(기본) / `ultra`.
+
+**사다리는 문제를 이해한 다음에 탄다.** 무엇을 건드리는지 모르는 채 고른 최소 변경은 게으른 게 아니라 두 번째 버그다. 버그는 증상이 아니라 근본 원인에서 고친다 — 공유 함수의 가드 하나가 호출자마다 다는 것보다 작은 diff다.
+
+멱등성은 네 가지로 압축된다: 무엇이 "같은 것"인지 먼저 정의하고, 상태를 만들지 말고 맞추고, 어디서 죽어도 재실행이 답이 되게 하고, 확인과 변경 사이의 틈을 없앤다. 층마다 기법이 달라 `references/idempotency-{setup,code,api}.md` 로 갈린다. **층 하나만 처리하고 멱등하다고 선언하지 않는다** — 핸들러에 중복 방지를 넣고 DB 유니크 제약을 빼먹는 게 가장 흔한 실패다.
+
+단발 모드:
+
+| 모드 | 하는 일 | 출력 |
+|---|---|---|
+| `review` | 지금의 diff 에서 과잉설계 찾기 | `L42: yagni: 구현체 하나뿐인 팩토리. 인라인.` → `net: -N lines possible.` |
+| `audit` | 레포 전체, 삭제량 큰 순 | 위와 같은 형식 + `-M deps` |
+| `debt` | `ponytail:` / `idempotent:` 마커를 장부로 수집 | 파일별 한 줄 + `no-trigger` 태그 |
+| `spec` | `docs/api-spec.md`, `docs/screen-spec.md` 생성·갱신 | 템플릿 두 개를 채운 문서 |
+| `handoff` | 대화를 인수인계 문서로 압축 | OS 임시 디렉토리에 저장 |
+
+`review` 와 `audit` 은 **복잡도만** 사냥한다. 정확성 버그, 보안, 성능은 명시적으로 범위 밖이고 일반 리뷰로 넘긴다.
+
+절대 단순화하지 않는 것: 신뢰 경계의 입력 검증, 데이터 손실을 막는 에러 처리, 보안, 접근성 기본, 사용자가 명시적으로 요청한 것.
+
+처음 켤 때 `assets/claude-md-card.md` 를 프로젝트의 `CLAUDE.md` 에 `<!-- develop_rule:start -->` 마커로 고정한다. 대화가 압축돼도 원칙이 살아남게 하기 위해서다. 마커가 이미 있으면 그 구간만 교체하므로 몇 번 실행해도 같은 파일이 된다.
 
 ---
 
@@ -193,53 +205,48 @@ diff 한정 리뷰. 정확성·보안·성능은 **범위 밖**(일반 리뷰로
 
 ```
 awesome_skills/
-├── README.md
+├── install.sh                     # 부트스트랩 (clone/pull → link)
+├── bin/awesome-skills             # link / update / list / uninstall / brief
+├── hooks/inject-brief.sh          # SessionStart·PostCompact 에 brief 규칙 주입
 └── .claude/
-    ├── settings.json          # 권한 allowlist, 마켓플레이스, 플러그인 활성화
+    ├── settings.json              # 마켓플레이스, 플러그인 활성화
     └── skills/
-        ├── skills-readme/SKILL.md
-        ├── ponytail/SKILL.md
-        ├── ponytail-review/SKILL.md
-        ├── ponytail-audit/SKILL.md
-        ├── ponytail-debt/SKILL.md
-        ├── ponytail-gain/SKILL.md
-        ├── ponytail-help/SKILL.md
-        ├── grilling/SKILL.md
-        ├── grill-me/SKILL.md
-        └── handoff/SKILL.md
+        ├── common/                # SKILL.md + references(5) + agents(3) + scripts(8) + eval-viewer
+        ├── humanism_talk/         # SKILL.md + references/brief.md + README.md
+        └── develop_rule/          # SKILL.md + references(9) + assets(3)
 ```
 
-`.claude/settings.json`에는 스킬 외에 [obra/superpowers](https://github.com/obra/superpowers) 플러그인이 마켓플레이스 경유로 활성화되어 있다. 이건 로컬 SKILL.md가 아니라 플러그인이라 위 목록과는 별개로 관리된다.
+`.claude/settings.json` 에는 스킬 외에 [obra/superpowers](https://github.com/obra/superpowers) 플러그인이 마켓플레이스 경유로 활성화되어 있다. 로컬 `SKILL.md` 가 아니라 플러그인이므로 위 목록과는 별개로 관리된다.
 
 ---
 
 ## 스킬 추가하기
 
-원격 저장소의 SKILL.md 하나만 가져오면 끝이다.
+이 저장소는 세 개로 수렴하는 것을 목표로 한다. 새 기능은 대개 **새 스킬이 아니라 기존 스킬의 모드**로 붙는 편이 맞다. 스킬이 늘어나면 모델이 어느 것을 켤지 헷갈리고, 그게 곧 트리거 정확도 하락이다.
 
-```bash
-mkdir -p .claude/skills/<name>
-curl -sfL "https://raw.githubusercontent.com/<owner>/<repo>/main/skills/<name>/SKILL.md" \
-  -o .claude/skills/<name>/SKILL.md
-```
+그래도 새 스킬이 필요하면 `/common create` 로 시작한다. 인터뷰 → 초안 → 테스트 케이스까지 안내한다. 확인할 것:
 
-체크 포인트:
+- **frontmatter** — `name` 은 디렉토리 이름과 같아야 한다. `description` 은 모델이 언제 켤지 판단하는 근거이므로 트리거 문구를 구체적으로 쓴다.
+- **참조 파일** — 스크립트·템플릿은 스킬 디렉토리 안에 두고 상대 경로로 참조한다. 저장소 바깥 경로에 의존하면 전역 설치가 깨진다.
+- **이름 보존** — 기존 스킬을 고칠 때 이름을 바꾸지 않는다. 이름이 바뀌면 수정이 아니라 새 스킬이고, 전역 설치에서는 둘이 트리거를 두고 경쟁한다.
 
-- **frontmatter** — `name`(디렉토리명과 일치), `description`(모델이 언제 쓸지 판단하는 근거이므로 트리거 문구를 구체적으로), 선택적으로 `argument-hint`, `disable-model-invocation`.
-- **참조 파일** — SKILL.md가 같은 디렉토리의 스크립트·템플릿을 참조하면 그 파일들도 함께 받아야 한다. 현재 설치된 10개는 전부 참조 없는 self-contained.
-- **훅 의존성** — 업스트림이 세션 자동 활성화나 상태줄을 훅으로 구현했다면, SKILL.md만 복사한 구성에서는 동작하지 않는다(위 `ponytail-help` 주의사항 참고).
-
-설치 후 새 세션에서 스킬 목록에 잡히는지 확인한다.
+작업이 끝나면 `/common docs` 로 이 카탈로그를 갱신하고, 커밋·푸시한 뒤 `awesome-skills update` 로 전역에 반영한다.
 
 ---
 
 ## 라이선스 / 크레딧
 
-외부 스킬의 저작권은 원저작자에게 있다. 두 출처 모두 MIT.
+이 세 스킬은 기존 오픈소스 스킬들을 실사용 케이스 기준으로 재구성한 것이다. 원저작권은 각 원저작자에게 있다.
 
-- [DietrichGebert/ponytail](https://github.com/DietrichGebert/ponytail) — MIT — ponytail 6종
-- [mattpocock/skills](https://github.com/mattpocock/skills) — MIT — `grilling`, `grill-me`, `handoff`
-- 이 저장소 — `skills-readme`
+| 출처 | 라이선스 | 흡수된 곳 |
+|---|---|---|
+| [anthropics/skills](https://github.com/anthropics/skills) — `skill-creator` | Apache-2.0 ([전문](.claude/skills/common/LICENSE.txt)) | `common` 의 `create` / `eval` / `describe` |
+| [DietrichGebert/ponytail](https://github.com/DietrichGebert/ponytail) | MIT | `develop_rule` 의 최소 축, `review` / `audit` / `debt` |
+| [JuliusBrussee/caveman](https://github.com/JuliusBrussee/caveman) | MIT | `humanism_talk` 의 `brief` |
+| [mattpocock/skills](https://github.com/mattpocock/skills) | MIT | `humanism_talk` 의 `grill`, `develop_rule` 의 `handoff` |
+| 이 저장소 | MIT | `common` 의 `docs`, `develop_rule` 의 수렴·투영 축 |
+
+업스트림에서 가져오지 않은 것도 밝혀둔다. `ponytail-help`(레퍼런스 카드)과 `ponytail-gain`(벤치마크 스코어보드)은 옮기지 않았다. 전자는 `develop_rule/SKILL.md` 가 같은 역할을 하고 카드에 적힌 설정·업데이트 절차가 이 저장소에서는 동작하지 않기 때문이고, 후자는 업스트림이 측정한 벤치마크 중앙값이라 산출 근거가 여기 없기 때문이다. 두 기능이 필요하면 원본 저장소를 직접 쓰면 된다.
 <!-- skills:end -->
 
 ---
@@ -249,10 +256,10 @@ curl -sfL "https://raw.githubusercontent.com/<owner>/<repo>/main/skills/<name>/S
 스킬 추가, 문서 수정, 버그 제보 모두 환영한다.
 
 1. 저장소를 포크한다.
-2. `.claude/skills/<name>/SKILL.md` 를 추가한다. frontmatter의 `name` 은 디렉토리 이름과 같아야 한다.
+2. 먼저 기존 세 스킬의 **모드로 붙일 수 있는지** 본다. 스킬이 늘어나면 모델이 어느 것을 켤지 헷갈리고 그게 곧 트리거 정확도 하락이다. 새 스킬이 맞다면 `/common create` 로 시작한다. frontmatter의 `name` 은 디렉토리 이름과 같아야 한다.
 3. 외부에서 가져온 스킬이라면 원저작자와 라이선스를 PR 본문에 밝힌다. 라이선스가 MIT/Apache-2.0 계열이 아니면 먼저 이슈로 논의해달라.
 4. `awesome-skills link` 를 실행하고 Claude Code를 재시작해 스킬 목록에 잡히는지 확인한 뒤 PR을 연다.
-5. README의 스킬 카탈로그는 `/skills-readme` 로 갱신한다. 카탈로그 마커 사이 구간만 교체되므로 직접 손으로 쓴 부분은 남는다.
+5. README의 스킬 카탈로그는 `/common docs` 로 갱신한다. 카탈로그 마커 사이 구간만 교체되므로 직접 손으로 쓴 부분은 남는다.
 
 버그 제보와 스킬 제안은 [Issues](https://github.com/ash-hun/awesome_skills/issues)로.
 

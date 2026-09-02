@@ -68,7 +68,7 @@ Once all runs are done:
 
 1. **Grade each run** — spawn a grader subagent (or grade inline) that reads `agents/grader.md` and evaluates each assertion against the outputs. Save results to `grading.json` in each run directory. The grading.json expectations array must use the fields `text`, `passed`, and `evidence` (not `name`/`met`/`details` or other variants) — the viewer depends on these exact field names. For assertions that can be checked programmatically, write and run a script rather than eyeballing it — scripts are faster, more reliable, and can be reused across iterations.
 
-2. **Aggregate into benchmark** — run the aggregation script from the skill-creator directory:
+2. **Aggregate into benchmark** — run the aggregation script from this skill's directory:
    ```bash
    python -m scripts.aggregate_benchmark <workspace>/iteration-N --skill-name <name>
    ```
@@ -79,7 +79,7 @@ Put each with_skill version before its baseline counterpart.
 
 4. **Launch the viewer** with both qualitative outputs and quantitative data:
    ```bash
-   nohup python <skill-creator-path>/eval-viewer/generate_review.py \
+   nohup python <common-skill-path>/eval-viewer/generate_review.py \
      <workspace>/iteration-N \
      --skill-name "my-skill" \
      --benchmark <workspace>/iteration-N/benchmark.json \
@@ -91,6 +91,11 @@ Put each with_skill version before its baseline counterpart.
    **Cowork / headless environments:** If `webbrowser.open()` is not available or the environment has no display, use `--static <output_path>` to write a standalone HTML file instead of starting a server. Feedback will be downloaded as a `feedback.json` file when the user clicks "Submit All Reviews". After download, copy `feedback.json` into the workspace directory for the next iteration to pick up.
 
 Note: please use generate_review.py to create the viewer; there's no need to write custom HTML.
+
+**Launch the viewer before you form your own opinion of the outputs.** The point of this step is to
+get the results in front of the human as early as possible. If you read the outputs, decide what is
+wrong, and start revising before they have seen anything, the loop quietly becomes you reviewing
+yourself — which is exactly what the human review step exists to prevent.
 
 5. **Tell the user** something like: "I've opened the results in your browser. There are two tabs — 'Outputs' lets you click through each test case and leave feedback, 'Benchmark' shows the quantitative comparison. When you're done, come back here and let me know."
 

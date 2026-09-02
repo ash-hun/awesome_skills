@@ -71,12 +71,31 @@ cmd_link() {
     fi
   done < <(each_skill)
 
+  # A link we own whose target is gone means the skill was removed upstream.
+  # Left in place it shows up as a broken skill, so prune it here.
+  local entry target
+  local -a pruned=()
+  for entry in "$DEST_DIR"/*; do
+    [ -L "$entry" ] || continue
+    owned_link "$entry" || continue
+    target="$(readlink "$entry")"
+    if [ ! -d "$target" ]; then
+      rm -f "$entry"
+      pruned+=("$(basename "$entry")")
+    fi
+  done
+
   mkdir -p "$BIN_DIR"
   ln -sfn "$HOME_DIR/bin/awesome-skills" "$BIN_DIR/awesome-skills"
 
   printf '\nLinked %d skill(s) into %s\n' "${#linked[@]}" "$DEST_DIR"
   if [ "${#linked[@]}" -gt 0 ]; then
     printf '  %s\n' "${linked[@]}"
+  fi
+
+  if [ "${#pruned[@]}" -gt 0 ]; then
+    printf '\nRemoved %d link(s) whose skill no longer exists in the repo:\n' "${#pruned[@]}"
+    printf '  %s\n' "${pruned[@]}"
   fi
 
   if [ "${#skipped[@]}" -gt 0 ]; then
