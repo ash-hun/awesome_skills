@@ -1,0 +1,188 @@
+#!/usr/bin/env bash
+#
+# awesome-skills — manage the globally installed awesome_skills collection.
+#
+#   awesome-skills link        create or refresh the symlinks (idempotent)
+#   awesome-skills update      pull the latest commit, then re-link
+#   awesome-skills list        show the status of every skill in the repo
+#   awesome-skills uninstall   remove the symlinks this tool created
+#
+# Every command is safe to run repeatedly: running it twice leaves the machine
+# in the same state as running it once.
+#
+# Environment overrides:
+#   AWESOME_SKILLS_HOME    where the clone lives (default: ~/.awesome-skills)
+#   AWESOME_SKILLS_BRANCH  branch to track (default: main)
+#   AWESOME_SKILLS_BIN     where the CLI symlink goes (default: ~/.local/bin)
+#   CLAUDE_CONFIG_DIR      Claude Code config dir (default: ~/.claude)
+
+set -euo pipefail
+
+HOME_DIR="${AWESOME_SKILLS_HOME:-$HOME/.awesome-skills}"
+BRANCH="${AWESOME_SKILLS_BRANCH:-main}"
+BIN_DIR="${AWESOME_SKILLS_BIN:-$HOME/.local/bin}"
+SRC_DIR="$HOME_DIR/.claude/skills"
+DEST_DIR="${CLAUDE_CONFIG_DIR:-$HOME/.claude}/skills"
+
+die() { printf 'awesome-skills: %s\n' "$*" >&2; exit 1; }
+
+# True when $1 is a symlink whose target points inside the awesome_skills clone.
+owned_link() {
+  local path="$1" target
+  [ -L "$path" ] || return 1
+  target="$(readlink "$path")"
+  case "$target" in
+    "$HOME_DIR"/*) return 0 ;;
+    *) return 1 ;;
+  esac
+}
+
+# Print every directory under .claude/skills that actually holds a SKILL.md.
+each_skill() {
+  local dir
+  [ -d "$SRC_DIR" ] || die "no skills found at $SRC_DIR — is $HOME_DIR a complete clone?"
+  for dir in "$SRC_DIR"/*/; do
+    [ -f "$dir/SKILL.md" ] || continue
+    printf '%s\n' "${dir%/}"
+  done
+}
+
+cmd_link() {
+  local src name dest
+  local -a linked=() skipped=()
+
+  mkdir -p "$DEST_DIR"
+
+  while IFS= read -r src; do
+    name="$(basename "$src")"
+    dest="$DEST_DIR/$name"
+
+    if [ -L "$dest" ]; then
+      # A symlink is ours to manage, whoever created it.
+      ln -sfn "$src" "$dest"
+      linked+=("$name")
+    elif [ -e "$dest" ]; then
+      # A real directory or file is the user's own work. Leave it alone.
+      skipped+=("$name")
+    else
+      ln -s "$src" "$dest"
+      linked+=("$name")
+    fi
+  done < <(each_skill)
+
+  mkdir -p "$BIN_DIR"
+  ln -sfn "$HOME_DIR/bin/awesome-skills" "$BIN_DIR/awesome-skills"
+
+  printf '\nLinked %d skill(s) into %s\n' "${#linked[@]}" "$DEST_DIR"
+  if [ "${#linked[@]}" -gt 0 ]; then
+    printf '  %s\n' "${linked[@]}"
+  fi
+
+  if [ "${#skipped[@]}" -gt 0 ]; then
+    printf '\nSkipped %d skill(s) — a real directory already exists at that name:\n' "${#skipped[@]}"
+    printf '  %s\n' "${skipped[@]}"
+    printf 'Rename or remove those directories and re-run "awesome-skills link" to take them over.\n'
+  fi
+
+  printf '\nInstalled the CLI at %s/awesome-skills\n' "$BIN_DIR"
+  case ":$PATH:" in
+    *":$BIN_DIR:"*) ;;
+    *)
+      printf '\n%s is not on your PATH. Add this line to ~/.zshrc, then open a new shell:\n\n' "$BIN_DIR"
+      printf '  export PATH="%s:$PATH"\n' "$BIN_DIR"
+      ;;
+  esac
+
+  printf '\nRestart Claude Code to pick up the new skills.\n'
+}
+
+cmd_update() {
+  [ -d "$HOME_DIR/.git" ] || die "$HOME_DIR is not a git clone. Re-run install.sh."
+  printf 'Updating %s ...\n' "$HOME_DIR"
+  git -C "$HOME_DIR" fetch --quiet origin "$BRANCH"
+  git -C "$HOME_DIR" checkout --quiet "$BRANCH"
+  git -C "$HOME_DIR" merge --quiet --ff-only "origin/$BRANCH"
+  cmd_link
+}
+
+cmd_list() {
+  local src name dest status target
+  printf '%-22s %s\n' "SKILL" "STATUS"
+  while IFS= read -r src; do
+    name="$(basename "$src")"
+    dest="$DEST_DIR/$name"
+
+    if owned_link "$dest"; then
+      target="$(readlink "$dest")"
+      if [ -f "$target/SKILL.md" ]; then
+        status="linked"
+      else
+        status="broken (target missing)"
+      fi
+    elif [ -L "$dest" ]; then
+      status="skipped (symlink elsewhere)"
+    elif [ -e "$dest" ]; then
+      status="skipped (real directory)"
+    else
+      status="not linked"
+    fi
+
+    printf '%-22s %s\n' "$name" "$status"
+  done < <(each_skill)
+}
+
+cmd_uninstall() {
+  local purge=0 entry
+  local -a removed=()
+
+  [ "${1:-}" = "--purge" ] && purge=1
+
+  if [ -d "$DEST_DIR" ]; then
+    for entry in "$DEST_DIR"/*; do
+      [ -e "$entry" ] || [ -L "$entry" ] || continue
+      if owned_link "$entry"; then
+        rm -f "$entry"
+        removed+=("$(basename "$entry")")
+      fi
+    done
+  fi
+
+  printf 'Removed %d symlink(s) from %s\n' "${#removed[@]}" "$DEST_DIR"
+  if [ "${#removed[@]}" -gt 0 ]; then
+    printf '  %s\n' "${removed[@]}"
+  fi
+
+  if owned_link "$BIN_DIR/awesome-skills"; then
+    rm -f "$BIN_DIR/awesome-skills"
+    printf 'Removed %s/awesome-skills\n' "$BIN_DIR"
+  fi
+
+  if [ "$purge" -eq 1 ]; then
+    rm -rf "$HOME_DIR"
+    printf 'Removed the clone at %s\n' "$HOME_DIR"
+  else
+    printf '\nThe clone at %s was left in place.\n' "$HOME_DIR"
+    printf 'Run "awesome-skills uninstall --purge" (or "rm -rf %s") to delete it too.\n' "$HOME_DIR"
+  fi
+}
+
+usage() {
+  cat <<'USAGE'
+awesome-skills — manage the globally installed awesome_skills collection.
+
+Usage:
+  awesome-skills link                create or refresh the skill symlinks
+  awesome-skills update              pull the latest commit, then re-link
+  awesome-skills list                show the status of every skill
+  awesome-skills uninstall [--purge] remove the symlinks; --purge also deletes the clone
+USAGE
+}
+
+case "${1:-}" in
+  link) cmd_link ;;
+  update) cmd_update ;;
+  list) cmd_list ;;
+  uninstall) shift; cmd_uninstall "${1:-}" ;;
+  -h|--help|help|"") usage ;;
+  *) usage >&2; exit 1 ;;
+esac

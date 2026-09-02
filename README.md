@@ -1,8 +1,92 @@
-# awesome_skills
+<div align="center">
 
-프로젝트 로컬에 설치된 **Claude Code Skills** 모음. 이 저장소를 작업 디렉토리로 열었을 때만 로드되며, 전역 설정(`~/.claude`)은 건드리지 않는다.
+# Awesome Skills
 
-모든 스킬은 `.claude/skills/<name>/SKILL.md` 단일 파일로 self-contained 하게 설치되어 있다. 추가 스크립트, 훅, 의존성 없음.
+A curated collection of Claude Code skills, installable system-wide with a single command.
+
+[![skills](https://img.shields.io/badge/skills-14-8A2BE2?style=flat)](.claude/skills) [![contributors](https://img.shields.io/github/contributors/ash-hun/awesome_skills?style=flat&logo=github&color=blue)](https://github.com/ash-hun/awesome_skills/graphs/contributors) [![forks](https://img.shields.io/github/forks/ash-hun/awesome_skills?style=flat&logo=github&color=blue)](https://github.com/ash-hun/awesome_skills/network/members) [![stars](https://img.shields.io/github/stars/ash-hun/awesome_skills?style=flat&logo=github&color=yellow)](https://github.com/ash-hun/awesome_skills/stargazers) [![issues](https://img.shields.io/github/issues/ash-hun/awesome_skills?style=flat&logo=github&color=red)](https://github.com/ash-hun/awesome_skills/issues) [![last commit](https://img.shields.io/github/last-commit/ash-hun/awesome_skills?style=flat&logo=github)](https://github.com/ash-hun/awesome_skills/commits/main) [![license](https://img.shields.io/github/license/ash-hun/awesome_skills?style=flat&color=green)](LICENSE)
+
+</div>
+
+---
+
+## 무엇인가
+
+[Claude Code](https://claude.com/claude-code)에사 유용하게 사용할 수 있는 **Custom Skill** 을 모아둔 저장소다. 설치하면 어느 디렉토리에서 Claude Code를 열든 모든 스킬이 로드된다.
+
+모든 스킬은 `.claude/skills/<name>/SKILL.md` 단일 파일로 self-contained 하게 작성되어 있다. 추가 스크립트, 훅, 런타임 의존성 없음.
+
+**요구사항** — macOS 또는 Linux, `git`, `bash`. Claude Code가 이미 설치되어 있어야 한다.
+
+---
+
+## 설치
+
+```bash
+curl -fsSL https://raw.githubusercontent.com/ash-hun/awesome_skills/main/install.sh | bash
+```
+
+이 한 줄이 하는 일은 세 가지다.
+
+1. 저장소를 `~/.awesome-skills` 에 클론한다. 이미 있으면 최신 커밋으로 갱신한다.
+2. 각 스킬을 `~/.claude/skills/<name>` 으로 심볼릭 링크한다.
+3. 관리 명령어를 `~/.local/bin/awesome-skills` 에 설치한다.
+
+설치가 끝나면 Claude Code를 재시작해야 새 스킬이 목록에 잡힌다. `~/.local/bin` 이 `PATH` 에 없으면 설치 스크립트가 추가할 줄을 알려준다.
+
+파이프로 실행하는 스크립트를 그대로 믿기 어렵다면, 먼저 내용을 확인한 뒤 실행해도 된다.
+
+```bash
+curl -fsSL https://raw.githubusercontent.com/ash-hun/awesome_skills/main/install.sh -o install.sh
+less install.sh
+bash install.sh
+```
+
+### 설치 후 배치
+
+```
+~/.awesome-skills/                       # git clone
+├── install.sh
+├── bin/awesome-skills
+└── .claude/skills/<name>/SKILL.md
+
+~/.claude/skills/<name>      ->  ~/.awesome-skills/.claude/skills/<name>
+~/.local/bin/awesome-skills  ->  ~/.awesome-skills/bin/awesome-skills
+```
+
+실제 파일은 클론 한 곳에만 존재하고 `~/.claude/skills` 에는 링크만 놓인다. 따라서 `awesome-skills update` 한 번이면 모든 스킬이 함께 갱신되고, 클론에서 스킬을 직접 고치면 그 변경이 곧바로 전역에 반영된다.
+
+### 관리 명령어
+
+| 명령 | 동작 |
+|---|---|
+| `awesome-skills link` | 심볼릭 링크를 만들거나 갱신한다 |
+| `awesome-skills update` | 최신 커밋을 받아온 뒤 다시 링크한다 |
+| `awesome-skills list` | 스킬별 링크 상태를 출력한다 |
+| `awesome-skills uninstall` | 이 도구가 만든 링크만 제거한다 |
+| `awesome-skills uninstall --purge` | 링크와 함께 `~/.awesome-skills` 클론까지 지운다 |
+
+모든 명령은 멱등이다. 여러 번 실행해도 한 번 실행한 것과 결과가 같다.
+
+### 이름이 겹칠 때
+
+`~/.claude/skills/<name>` 에 이미 **실제 디렉토리**가 있으면 그 스킬은 건너뛰고, 설치가 끝날 때 건너뛴 목록을 출력한다. 직접 작성한 전역 스킬을 덮어쓰지 않기 위한 동작이다. 저장소 쪽으로 넘기고 싶다면 그 디렉토리를 옮기거나 지운 뒤 `awesome-skills link` 를 다시 실행한다. 이미 심볼릭 링크인 경우에는 그대로 갱신한다.
+
+`uninstall` 도 같은 원칙을 따른다. 링크 대상이 `~/.awesome-skills` 안을 가리킬 때만 지우므로, 직접 만든 스킬과 다른 곳을 가리키는 링크는 그대로 남는다.
+
+### 설정 파일
+
+설치 스크립트는 `~/.claude/settings.json` 을 건드리지 않는다. 이 저장소의 `.claude/settings.json` 에 등록된 [obra/superpowers](https://github.com/obra/superpowers) 플러그인까지 쓰려면 Claude Code에서 직접 마켓플레이스를 추가해야 한다.
+
+### 환경 변수
+
+| 변수 | 기본값 | 용도 |
+|---|---|---|
+| `AWESOME_SKILLS_HOME` | `~/.awesome-skills` | 클론 위치 |
+| `AWESOME_SKILLS_BRANCH` | `main` | 추적할 브랜치 |
+| `AWESOME_SKILLS_BIN` | `~/.local/bin` | CLI 설치 위치 |
+| `AWESOME_SKILLS_REPO` | 이 저장소의 GitHub URL | 클론할 원격 (포크에서 쓸 때) |
+| `CLAUDE_CONFIG_DIR` | `~/.claude` | Claude Code 설정 디렉토리 |
 
 ---
 
@@ -134,3 +218,23 @@ curl -sfL "https://raw.githubusercontent.com/<owner>/<repo>/main/skills/<name>/S
 - [mattpocock/skills](https://github.com/mattpocock/skills) — MIT — `grilling`, `grill-me`, `handoff`
 - 이 저장소 — `skills-readme`
 <!-- skills:end -->
+
+---
+
+## 기여하기
+
+스킬 추가, 문서 수정, 버그 제보 모두 환영한다.
+
+1. 저장소를 포크한다.
+2. `.claude/skills/<name>/SKILL.md` 를 추가한다. frontmatter의 `name` 은 디렉토리 이름과 같아야 한다.
+3. 외부에서 가져온 스킬이라면 원저작자와 라이선스를 PR 본문에 밝힌다. 라이선스가 MIT/Apache-2.0 계열이 아니면 먼저 이슈로 논의해달라.
+4. `awesome-skills link` 를 실행하고 Claude Code를 재시작해 스킬 목록에 잡히는지 확인한 뒤 PR을 연다.
+5. README의 스킬 카탈로그는 `/skills-readme` 로 갱신한다. 카탈로그 마커 사이 구간만 교체되므로 직접 손으로 쓴 부분은 남는다.
+
+버그 제보와 스킬 제안은 [Issues](https://github.com/ash-hun/awesome_skills/issues)로.
+
+## 라이선스
+
+이 저장소의 설치 스크립트와 자체 작성 스킬은 [MIT 라이선스](LICENSE)를 따른다.
+
+외부에서 가져온 스킬의 저작권은 원저작자에게 있다. 출처와 라이선스는 위 카탈로그의 **라이선스 / 크레딧** 항목에 정리되어 있다.
