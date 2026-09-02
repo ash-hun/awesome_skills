@@ -65,8 +65,31 @@ bash install.sh
 | `awesome-skills list` | 스킬별 링크 상태를 출력한다 |
 | `awesome-skills uninstall` | 이 도구가 만든 링크만 제거한다 |
 | `awesome-skills uninstall --purge` | 링크와 함께 `~/.awesome-skills` 클론까지 지운다 |
+| `awesome-skills brief [on\|off\|status]` | `humanism_talk` 의 압축 응답 모드를 모든 세션에 적용/해제 |
 
 모든 명령은 멱등이다. 여러 번 실행해도 한 번 실행한 것과 결과가 같다.
+
+### brief 모드 항상 켜기
+
+`humanism_talk` 스킬의 `brief` 모드(압축 응답 + 목표·인과·액션 구조)는 매번 부르지 않고 모든 세션에 자동으로 걸 수 있다.
+
+```bash
+awesome-skills brief on
+```
+
+`~/.claude/settings.json` 에 `SessionStart` 와 `PostCompact` 훅을 등록한다. 새 세션이 시작될 때와 컨텍스트가 압축된 뒤에 `humanism_talk/references/brief.md` 의 규칙이 주입된다. 기존 설정과 다른 훅은 그대로 두고, 여러 번 실행해도 훅은 하나만 남는다. `jq` 가 필요하다.
+
+끄는 방법은 세 가지다.
+
+| 방법 | 범위 |
+|---|---|
+| `awesome-skills brief off` | 훅 자체를 제거 |
+| `<project>/.claude/humanism_talk.off` 파일 생성 | 그 프로젝트에서만 무시 |
+| `~/.claude/humanism_talk.off` 파일 생성 | 훅은 두고 전역으로 무시 |
+
+세션 안에서 일시적으로 풀려면 `"stop caveman"`, `"normal mode"`, `/humanism_talk off` 라고 말하면 된다.
+
+이 명령은 설치 스크립트가 자동으로 실행하지 않는다. `~/.claude/settings.json` 은 사용자 개인 설정이라 명시적으로 켤 때만 건드린다.
 
 ### 이름이 겹칠 때
 

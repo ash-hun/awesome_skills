@@ -6,6 +6,7 @@
 #   awesome-skills update      pull the latest commit, then re-link
 #   awesome-skills list        show the status of every skill in the repo
 #   awesome-skills uninstall   remove the symlinks this tool created
+#   awesome-skills brief      apply the humanism_talk brief rules to every session
 #
 # Every command is safe to run repeatedly: running it twice leaves the machine
 # in the same state as running it once.
@@ -166,6 +167,62 @@ cmd_uninstall() {
   fi
 }
 
+cmd_brief() {
+  local action="${1:-status}"
+  local settings="${CLAUDE_CONFIG_DIR:-$HOME/.claude}/settings.json"
+  local script="$HOME_DIR/hooks/inject-brief.sh"
+  local tmp
+
+  command -v jq >/dev/null 2>&1 || die "jq is required for this command but was not found in PATH."
+
+  case "$action" in
+    on)
+      [ -f "$script" ] || die "hook script not found at $script. Run \"awesome-skills update\" first."
+      [ -x "$script" ] || chmod +x "$script"
+      mkdir -p "$(dirname "$settings")"
+      [ -f "$settings" ] || printf '{}\n' > "$settings"
+
+      tmp="$(mktemp)"
+      jq --arg cmd "\"$script\"" '
+        def strip(ev): (.hooks[ev] // [])
+          | map(select(any(.hooks[]?; (.command // "") | contains("inject-brief.sh")) | not));
+        def entry(ev; msg): {hooks: [{type: "command", command: ($cmd + " " + ev), timeout: 10, statusMessage: msg}]};
+        .hooks = (.hooks // {})
+        | .hooks.SessionStart = (strip("SessionStart") + [entry("SessionStart"; "humanism_talk brief 규칙 주입 중")])
+        | .hooks.PostCompact  = (strip("PostCompact")  + [entry("PostCompact";  "humanism_talk brief 규칙 재주입 중")])
+      ' "$settings" > "$tmp" && mv "$tmp" "$settings"
+
+      printf 'brief mode is on. Registered SessionStart and PostCompact hooks in %s\n' "$settings"
+      printf 'New Claude Code sessions will start with the humanism_talk brief rules applied.\n'
+      printf '\nTo silence it in one project without unregistering, create <project>/.claude/humanism_talk.off\n'
+      ;;
+    off)
+      [ -f "$settings" ] || { printf 'brief mode is already off (no %s)\n' "$settings"; return; }
+      tmp="$(mktemp)"
+      jq '
+        if .hooks then
+          .hooks |= (with_entries(.value |= map(select(any(.hooks[]?; (.command // "") | contains("inject-brief.sh")) | not)))
+                     | with_entries(select(.value | length > 0)))
+        else . end
+      ' "$settings" > "$tmp" && mv "$tmp" "$settings"
+      printf 'brief mode is off. Removed the hooks from %s\n' "$settings"
+      ;;
+    status)
+      if [ -f "$settings" ] && jq -e '[.hooks // {} | .[]? | .[]? | .hooks[]? | select((.command // "") | contains("inject-brief.sh"))] | length > 0' "$settings" >/dev/null 2>&1; then
+        printf 'brief mode: on   (hooks registered in %s)\n' "$settings"
+      else
+        printf 'brief mode: off  (no hooks in %s)\n' "$settings"
+      fi
+      if [ -f "$HOME/.claude/humanism_talk.off" ]; then
+        printf 'note: ~/.claude/humanism_talk.off exists, so the hook exits early everywhere.\n'
+      fi
+      ;;
+    *)
+      die "unknown argument \"$action\". Use: awesome-skills brief [on|off|status]"
+      ;;
+  esac
+}
+
 usage() {
   cat <<'USAGE'
 awesome-skills — manage the globally installed awesome_skills collection.
@@ -175,6 +232,8 @@ Usage:
   awesome-skills update              pull the latest commit, then re-link
   awesome-skills list                show the status of every skill
   awesome-skills uninstall [--purge] remove the symlinks; --purge also deletes the clone
+  awesome-skills brief [on|off|status]
+                                     turn the humanism_talk brief mode on for every session
 USAGE
 }
 
@@ -183,6 +242,7 @@ case "${1:-}" in
   update) cmd_update ;;
   list) cmd_list ;;
   uninstall) shift; cmd_uninstall "${1:-}" ;;
+  brief) shift; cmd_brief "${1:-}" ;;
   -h|--help|help|"") usage ;;
   *) usage >&2; exit 1 ;;
 esac

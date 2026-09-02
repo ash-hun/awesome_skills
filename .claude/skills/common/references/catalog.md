@@ -1,22 +1,6 @@
----
-name: skills-readme
-description: >
-  Scan the project's installed skills (.claude/skills/*/SKILL.md) and rewrite
-  the skill catalog section of README.md from what those files actually say —
-  a summary table plus a per-skill detail section derived from each SKILL.md
-  body, not its frontmatter blurb. Replaces only the marked section, so
-  hand-written parts of the README survive. Use this whenever the user says
-  "README 최신화", "스킬 목록 정리해줘", "설치된 스킬 문서화", "스킬 README에
-  반영", "update the skills README", "document the installed skills", or right
-  after any skill is installed, removed, renamed, or edited in this project —
-  even if they don't name the README explicitly, since a stale skill catalog
-  is the usual thing they're actually complaining about.
-argument-hint: "[README 경로 (기본: ./README.md)]"
-# 단계적 전환: `common` 스킬로 흡수됨. 자동 트리거를 끄고 명시 호출만 남긴다.
-disable-model-invocation: true
----
+# 카탈로그 문서화
 
-# Skills README
+`common` 스킬의 참조 문서. 저장소의 README에서 스킬 카탈로그 구간을 다시 쓴다.
 
 설치된 스킬을 실제로 읽고 README의 스킬 카탈로그를 다시 쓴다.
 
@@ -24,7 +8,7 @@ disable-model-invocation: true
 
 ## 1. 수집
 
-`.claude/skills/*/SKILL.md`를 전부 읽는다. 프로젝트 로컬 스킬만 대상이고 `~/.claude`는 건드리지 않는다. 각각에서:
+저장소의 `.claude/skills/*/SKILL.md`를 전부 읽는다. 이 저장소가 전역 설치의 원본이므로 `~/.claude/skills` 아래 심볼릭 링크는 같은 파일을 가리킨다 — 따로 읽지 않는다. 각각에서:
 
 - frontmatter: `name`, `description`, `argument-hint`, `disable-model-invocation`, `license`
 - 본문: 실제 동작, 절차, 출력 형식, 명시적으로 범위 밖이라고 선언한 것
