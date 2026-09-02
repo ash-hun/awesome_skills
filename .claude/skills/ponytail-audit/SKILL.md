@@ -7,6 +7,8 @@ description: >
   codebase", "audit for over-engineering", "what can I delete from this repo",
   "find bloat", "ponytail-audit", or "/ponytail-audit". One-shot report, does
   not apply fixes.
+# 단계적 전환: `develop_rule` 스킬로 흡수됨. 자동 트리거를 끄고 명시 호출만 남긴다.
+disable-model-invocation: true
 ---
 
 ponytail-review, repo-wide. Scan the whole tree instead of a diff. Rank

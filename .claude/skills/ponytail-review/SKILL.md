@@ -8,6 +8,8 @@ description: >
   delete", "is this over-engineered", "simplify review", or invokes
   /ponytail-review. Complements correctness-focused review, this one only
   hunts complexity.
+# 단계적 전환: `develop_rule` 스킬로 흡수됨. 자동 트리거를 끄고 명시 호출만 남긴다.
+disable-model-invocation: true
 ---
 
 Review diffs for unnecessary complexity. One line per finding: location, what

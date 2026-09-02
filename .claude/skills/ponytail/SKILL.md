@@ -15,6 +15,8 @@ description: >
   summaries, recipes).
 argument-hint: "[lite|full|ultra]"
 license: MIT
+# 단계적 전환: `develop_rule` 스킬로 흡수됨. 자동 트리거를 끄고 명시 호출만 남긴다.
+disable-model-invocation: true
 ---
 
 # Ponytail

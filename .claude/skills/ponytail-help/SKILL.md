@@ -4,6 +4,8 @@ description: >
   Quick-reference card for all ponytail modes, skills, and commands.
   One-shot display, not a persistent mode. Trigger: /ponytail-help,
   "ponytail help", "what ponytail commands", "how do I use ponytail".
+# 단계적 전환: `develop_rule` 스킬로 흡수됨. 자동 트리거를 끄고 명시 호출만 남긴다.
+disable-model-invocation: true
 ---
 
 # Ponytail Help

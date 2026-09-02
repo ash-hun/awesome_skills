@@ -6,6 +6,8 @@ description: >
   persistent mode, and not a per-repo number. Trigger: /ponytail-gain,
   "ponytail gain", "what does ponytail save", "show ponytail impact",
   "ponytail scoreboard".
+# 단계적 전환: `develop_rule` 스킬로 흡수됨. 자동 트리거를 끄고 명시 호출만 남긴다.
+disable-model-invocation: true
 ---
 
 # Ponytail Gain
