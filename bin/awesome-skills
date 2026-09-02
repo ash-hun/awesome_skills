@@ -122,6 +122,14 @@ cmd_update() {
   git -C "$HOME_DIR" fetch --quiet origin "$BRANCH"
   git -C "$HOME_DIR" checkout --quiet "$BRANCH"
   git -C "$HOME_DIR" merge --quiet --ff-only "origin/$BRANCH"
+
+  # The pull may have rewritten this very script. Bash reads a script
+  # incrementally, so continuing here would run a mix of old and new code.
+  # Hand off to the updated copy instead, once.
+  if [ "${AWESOME_SKILLS_REEXEC:-}" != "1" ]; then
+    AWESOME_SKILLS_REEXEC=1 exec "$HOME_DIR/bin/awesome-skills" link
+  fi
+
   cmd_link
 }
 
