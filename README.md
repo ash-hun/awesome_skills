@@ -116,15 +116,17 @@ awesome-skills brief on
 <!-- skills:start -->
 ## 설치된 스킬
 
-세 개다. 각각이 여러 모드를 가지며, 모드는 인자로 고르거나 대화 문맥에서 자동으로 잡힌다.
+다섯 개다. 모드나 단계가 있는 스킬은 인자로 고르거나 대화 문맥에서 자동으로 잡힌다.
 
 | 스킬 | 호출 | 한 줄 요약 | 출처 |
 |---|---|---|---|
 | [`common`](.claude/skills/common/SKILL.md) | `/common [create\|eval\|describe\|docs]` | 스킬 자체를 만들고 검증하고 문서화하는 메타 스킬 | [anthropics/skills](https://github.com/anthropics/skills) + 이 저장소 |
 | [`humanism_talk`](.claude/skills/humanism_talk/SKILL.md) | `/humanism_talk [brief\|grill\|off]` | 대화 규율. 응답을 압축하고, 계획을 라운드로 캐묻는다 | [JuliusBrussee/caveman](https://github.com/JuliusBrussee/caveman) + [mattpocock/skills](https://github.com/mattpocock/skills) |
 | [`develop_rule`](.claude/skills/develop_rule/SKILL.md) | `/develop_rule [lite\|full\|ultra\|review\|audit\|debt\|spec\|handoff]` | 재현 가능한 개발. 최소로 짓고, 두 번 돌려도 같게, 문서는 코드에서 유도 | [DietrichGebert/ponytail](https://github.com/DietrichGebert/ponytail) + [mattpocock/skills](https://github.com/mattpocock/skills) + 이 저장소 |
+| [`msg_check`](.claude/skills/msg_check/SKILL.md) | `/msg_check` | 커밋·PR·진행 보고 문안을 네 기준으로 검수하고 수정안을 낸다. 승인하면 커밋·PR 까지 | 이 저장소 |
+| [`research_kit`](.claude/skills/research_kit/SKILL.md) | `/research_kit` | AI 연구·실험 키트. 조사 → 설계 → 실행·로깅 → 분석·보고서를 재현 가능하게 잇는다 | 이 저장소 + Anthropic `deep-research` |
 
-세 스킬 모두 `SKILL.md` 를 라우터로 두고 상세 절차는 `references/` 에 둔다. 트리거될 때 항상 읽히는 건 `SKILL.md` 뿐이고, 나머지는 해당 모드에 들어갈 때만 읽는다.
+모든 스킬이 `SKILL.md` 를 라우터로 두고 상세 절차는 `references/` 에 둔다. 트리거될 때 항상 읽히는 건 `SKILL.md` 뿐이고, 나머지는 해당 모드에 들어갈 때만 읽는다.
 
 ---
 
@@ -199,6 +201,34 @@ awesome-skills brief on
 
 처음 켤 때 `assets/claude-md-card.md` 를 프로젝트의 `CLAUDE.md` 에 `<!-- develop_rule:start -->` 마커로 고정한다. 대화가 압축돼도 원칙이 살아남게 하기 위해서다. 마커가 이미 있으면 그 구간만 교체하므로 몇 번 실행해도 같은 파일이 된다.
 
+### `msg_check` — 작업 메시지 검수
+
+커밋 메시지, PR 제목·본문, 슬랙·데일리 진행 보고를 **맥락 없이 빠르게 읽는 독자** 입장에서 검수한다. 초안을 새로 쓰지 않는다 — 사용자가 쓴 문안이 입력이고, 지적 사항과 수정안이 출력이다.
+
+| 기준 | 보는 것 |
+|---|---|
+| 가시성 | 첫 줄만 읽어도 무엇을 했는지 알 수 있는가, 섹션·불릿으로 나뉘었는가 |
+| 자연스러운 한국어 | "~를 진행했습니다", "~되어지다", "~에 대한" 같은 번역투 (`references/korean-style.md`) |
+| 과잉 설명 | 작업한 문제·기능 / 결과 / 특이사항 셋만 남았는가. 시행착오, 자기 평가, 파일 목록은 덜어낸다 |
+| 지칭 표현 | "그거", "해당 부분"을 diff·대화 맥락을 보고 독자가 알아볼 이름으로. 특정할 수 없으면 `<?>` 로 두고 묻는다 |
+
+커밋은 Conventional Commits 에 한국어 명사형 요약(`fix(auth): JWT 만료 경계값 검사 수정`). 수정안은 원문에 없는 사실을 채우지 않고, 원문의 조건·불확실성도 지우지 않는다. 커밋·PR 은 AskUserQuestion 으로 승인받은 뒤에만 실행하며 `--no-verify` 는 쓰지 않는다. 범위 밖: 초안 작성, 코드 리뷰, 이슈·릴리스 노트.
+
+### `research_kit` — AI 연구·실험 키트
+
+LLM 평가, 비교대조 실험, 모델 학습, 새 가설 탐색을 네 단계로 다룬다. 사용자가 있는 단계부터 시작하고, 산출물은 `research/<slug>/` 한 폴더에 모은다.
+
+| 단계 | 산출물 | 핵심 |
+|---|---|---|
+| 1. 질문·선행 조사 | `survey.md` | **light**(기본, 직접 검색 5~8회) / **full**(논문 작성 시, 조사 서브에이전트 병렬) |
+| 2. 가설·실험 설계 | `design.md` | 반증 가능한 가설, 한 번에 한 변수, 판정 기준을 실행 전에 숫자로 |
+| 3. 실행·로깅 | `runs/<run-id>/card.md` | config·git hash·seed·환경을 실험 카드에 기록 (`scripts/snapshot_env.sh`) |
+| 4. 분석·보고서 | `analysis.md`, `report.md` | 쌍체 bootstrap·McNemar(표준 라이브러리만), 지지/기각/판정 불가 |
+
+실험 카드를 채울 수 없는 실행(커밋 안 된 코드 등)은 탐색으로만 쓰고 보고서 근거로 쓰지 않는다. 숫자는 실행 결과나 출처 있는 문헌에서만 나온다. 범위 밖: 연구와 무관한 웹 조사, 논문 원고 조판, 학습 인프라 구축.
+
+부속: `references/` 5개, `assets/` 템플릿 3개, `scripts/snapshot_env.sh`.
+
 ---
 
 ## 디렉토리 구조
@@ -213,7 +243,9 @@ awesome_skills/
     └── skills/
         ├── common/                # SKILL.md + references(5) + agents(3) + scripts(8) + eval-viewer
         ├── humanism_talk/         # SKILL.md + references/brief.md + README.md
-        └── develop_rule/          # SKILL.md + references(9) + assets(3)
+        ├── develop_rule/          # SKILL.md + references(9) + assets(3)
+        ├── msg_check/             # SKILL.md + references(4) + evals
+        └── research_kit/          # SKILL.md + references(5) + assets(3) + scripts(1) + evals
 ```
 
 `.claude/settings.json` 에는 스킬 외에 [obra/superpowers](https://github.com/obra/superpowers) 플러그인이 마켓플레이스 경유로 활성화되어 있다. 로컬 `SKILL.md` 가 아니라 플러그인이므로 위 목록과는 별개로 관리된다.
@@ -222,7 +254,7 @@ awesome_skills/
 
 ## 스킬 추가하기
 
-이 저장소는 세 개로 수렴하는 것을 목표로 한다. 새 기능은 대개 **새 스킬이 아니라 기존 스킬의 모드**로 붙는 편이 맞다. 스킬이 늘어나면 모델이 어느 것을 켤지 헷갈리고, 그게 곧 트리거 정확도 하락이다.
+이 저장소는 스킬 수를 적게 유지하는 것을 목표로 한다. 새 기능은 대개 **새 스킬이 아니라 기존 스킬의 모드**로 붙는 편이 맞다. 스킬이 늘어나면 모델이 어느 것을 켤지 헷갈리고, 그게 곧 트리거 정확도 하락이다.
 
 그래도 새 스킬이 필요하면 `/common create` 로 시작한다. 인터뷰 → 초안 → 테스트 케이스까지 안내한다. 확인할 것:
 
@@ -236,7 +268,7 @@ awesome_skills/
 
 ## 라이선스 / 크레딧
 
-이 세 스킬은 기존 오픈소스 스킬들을 실사용 케이스 기준으로 재구성한 것이다. 원저작권은 각 원저작자에게 있다.
+이 스킬들은 기존 오픈소스 스킬들을 실사용 케이스 기준으로 재구성한 것이다. 원저작권은 각 원저작자에게 있다.
 
 | 출처 | 라이선스 | 흡수된 곳 |
 |---|---|---|
@@ -244,7 +276,8 @@ awesome_skills/
 | [DietrichGebert/ponytail](https://github.com/DietrichGebert/ponytail) | MIT | `develop_rule` 의 최소 축, `review` / `audit` / `debt` |
 | [JuliusBrussee/caveman](https://github.com/JuliusBrussee/caveman) | MIT | `humanism_talk` 의 `brief` |
 | [mattpocock/skills](https://github.com/mattpocock/skills) | MIT | `humanism_talk` 의 `grill`, `develop_rule` 의 `handoff` |
-| 이 저장소 | MIT | `common` 의 `docs`, `develop_rule` 의 수렴·투영 축 |
+| Anthropic `deep-research` 스킬 (Claude 내장) | 미확인 | `research_kit` 1단계 full 조사 절차 — 원문을 옮기지 않고 연구 문헌용으로 다시 씀 |
+| 이 저장소 | MIT | `common` 의 `docs`, `develop_rule` 의 수렴·투영 축, `msg_check`, `research_kit` |
 
 업스트림에서 가져오지 않은 것도 밝혀둔다. `ponytail-help`(레퍼런스 카드)과 `ponytail-gain`(벤치마크 스코어보드)은 옮기지 않았다. 전자는 `develop_rule/SKILL.md` 가 같은 역할을 하고 카드에 적힌 설정·업데이트 절차가 이 저장소에서는 동작하지 않기 때문이고, 후자는 업스트림이 측정한 벤치마크 중앙값이라 산출 근거가 여기 없기 때문이다. 두 기능이 필요하면 원본 저장소를 직접 쓰면 된다.
 <!-- skills:end -->
