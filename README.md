@@ -116,7 +116,7 @@ awesome-skills brief on
 <!-- skills:start -->
 ## 설치된 스킬
 
-다섯 개다. 모드나 단계가 있는 스킬은 인자로 고르거나 대화 문맥에서 자동으로 잡힌다.
+여섯 개다. 모드나 단계가 있는 스킬은 인자로 고르거나 대화 문맥에서 자동으로 잡힌다. `refactoring_service` 만 명시 호출 전용이다.
 
 | 스킬 | 호출 | 한 줄 요약 | 출처 |
 |---|---|---|---|
@@ -125,6 +125,7 @@ awesome-skills brief on
 | [`develop_rule`](.claude/skills/develop_rule/SKILL.md) | `/develop_rule [lite\|full\|ultra\|review\|audit\|debt\|spec\|handoff]` | 재현 가능한 개발. 최소로 짓고, 두 번 돌려도 같게, 문서는 코드에서 유도 | [DietrichGebert/ponytail](https://github.com/DietrichGebert/ponytail) + [mattpocock/skills](https://github.com/mattpocock/skills) + 이 저장소 |
 | [`msg_check`](.claude/skills/msg_check/SKILL.md) | `/msg_check` | 커밋·PR·진행 보고 문안을 네 기준으로 검수하고 수정안을 낸다. 승인하면 커밋·PR 까지 | 이 저장소 |
 | [`research_kit`](.claude/skills/research_kit/SKILL.md) | `/research_kit` | AI 연구·실험 키트. 조사 → 설계 → 실행·로깅 → 분석·보고서를 재현 가능하게 잇는다 | 이 저장소 + Anthropic `deep-research` |
+| [`refactoring_service`](.claude/skills/refactoring_service/SKILL.md) | `/refactoring_service [설계문서 경로]` (명시 호출 전용) | 기존 서비스 코드를 리팩토링하고 as-is 대비 to-be 변경 문서를 반드시 남긴다 | 이 저장소 |
 
 모든 스킬이 `SKILL.md` 를 라우터로 두고 상세 절차는 `references/` 에 둔다. 트리거될 때 항상 읽히는 건 `SKILL.md` 뿐이고, 나머지는 해당 모드에 들어갈 때만 읽는다.
 
@@ -235,6 +236,39 @@ LLM 평가, 비교대조 실험, 모델 학습, 새 가설 탐색을 네 단계�
 
 부속: `references/` 5개, `assets/` 템플릿 3개, `scripts/snapshot_env.sh`.
 
+### `refactoring_service`: 서비스 리팩토링과 변경 문서
+
+이미 만들어진 서비스의 구조를 동작 변경 없이 바꾸고, 무엇을 왜 바꿨는지 문서로 남긴다. `/refactoring_service` 로 직접 호출할 때만 실행된다. 설계문서 경로를 인자로 주면 그 문서대로, 주지 않으면 기본 방안(영속성 있는 운영 구조, 확장성을 고려한 구조)으로 간다. 기본 방안은 점검 목록이라 현재 코드에서 증상이 관찰되는 항목만 적용한다.
+
+1. 방향 확정 (설계문서 또는 `references/default-plan.md`, 그리고 항상 `references/code-rules.md`)
+2. as-is 분석. 기존 테스트는 하나씩 읽고 의도를 정리한다
+3. 모듈별 계획을 보여주고 AskUserQuestion 으로 승인받는다. 승인 전에는 코드를 고치지 않는다
+4. 기존 테스트와 mypy 로 기준선을 잡고, 테스트가 없는 영역은 현재 동작을 고정하는 특성 테스트를 먼저 쓴다
+5. 모듈 단위로 리팩토링하고 단위마다 테스트를 돌린다
+6. 전체 테스트, mypy, 의존 방향을 기준선과 비교한다
+7. 변경 문서를 쓴다
+
+구조와 별개로 손대는 Python 코드 전부에 코드 규칙을 적용한다.
+
+| 규칙 | 내용 |
+|---|---|
+| 호출 계층과 모듈명 | 의존은 한 방향. import 경로만 읽고 역할을 알 수 있게 `<대상>_<역할>.py` 로 짓는다 |
+| 멱등성과 공통 모듈 | 두 번 실행해도 같은 상태. 재사용되는 것은 `common/` 으로, logger 는 반드시 공통 모듈 |
+| 타입 힌트 | 모든 함수의 인자와 반환값에 필수 |
+| 객체화와 상속 | 기능 관점의 추상화를 적극적으로. 상태와 의존은 클래스로 묶고 생성자로 주입. 추상 클래스는 가급적 쓰지 않고 상속 깊이 1에서 2 권장 |
+| 파일 최상단 주석 | 전체 프로젝트 관점에서 이 모듈이 무엇인지 쓰는 모듈 docstring |
+| 테스트 | `tests/unit/`(모듈별)과 `tests/integ/`(API 수준 시나리오 e2e)로 분리하고 둘 다 통과. 기존 테스트의 의도를 보존 |
+| 도구 | uv, pytest, mypy |
+| OpenAPI 문서 | FastAPI 기준. 엔드포인트마다 기능 설명, 인자 설명, 사용 예제. 과한 설명 금지 |
+
+코드 규칙이 다루지 않는 판단과 Python 외 코드는 `develop_rule` 을 기본으로 따른다. 설계문서와 코드 규칙이 부딪히면 임의로 고르지 않고 AskUserQuestion 으로 묻는데, 프로젝트, 구조, 모듈, 충돌, 영향 순으로 위에서 아래로 설명한 뒤에 선택지를 낸다.
+
+변경 문서는 대상 서비스의 `docs/refactoring/YYYY-MM-DD-<서비스명>.md` 에 저장하고 구조는 고정이다: 개요(날짜, 작성자, 기준, 검증 결과) / 리팩토링 내용(모듈별 문단, 전과 후 비교) / 비고 및 특이사항.
+
+범위 밖: 새 기능 추가, 버그 수정, 커밋과 푸시. 작업 중 발견한 버그는 고치지 않고 비고에 적는다.
+
+부속: `references/code-rules.md`, `references/default-plan.md`, `assets/change-doc-template.md`, `evals`.
+
 ---
 
 ## 디렉토리 구조
@@ -251,7 +285,8 @@ awesome_skills/
         ├── humanism_talk/         # SKILL.md + references/brief.md + README.md
         ├── develop_rule/          # SKILL.md + references(9) + assets(3)
         ├── msg_check/             # SKILL.md + references(4) + evals
-        └── research_kit/          # SKILL.md + references(5) + assets(3) + scripts(1) + evals
+        ├── research_kit/          # SKILL.md + references(5) + assets(3) + scripts(1) + evals
+        └── refactoring_service/   # SKILL.md + references(2) + assets(1) + evals
 ```
 
 `.claude/settings.json` 에는 스킬 외에 [obra/superpowers](https://github.com/obra/superpowers) 플러그인이 마켓플레이스 경유로 활성화되어 있다. 로컬 `SKILL.md` 가 아니라 플러그인이므로 위 목록과는 별개로 관리된다.
@@ -283,7 +318,7 @@ awesome_skills/
 | [JuliusBrussee/caveman](https://github.com/JuliusBrussee/caveman) | MIT | `humanism_talk` 의 `brief` |
 | [mattpocock/skills](https://github.com/mattpocock/skills) | MIT | `humanism_talk` 의 `grill`, `develop_rule` 의 `handoff` |
 | Anthropic `deep-research` 스킬 (Claude 내장) | 미확인 | `research_kit` 1단계 full 조사 절차 — 원문을 옮기지 않고 연구 문헌용으로 다시 씀 |
-| 이 저장소 | MIT | `common` 의 `docs`, `develop_rule` 의 수렴·투영 축, `msg_check`, `research_kit` |
+| 이 저장소 | MIT | `common` 의 `docs`, `develop_rule` 의 수렴·투영 축, `msg_check`, `research_kit`, `refactoring_service` |
 
 업스트림에서 가져오지 않은 것도 밝혀둔다. `ponytail-help`(레퍼런스 카드)과 `ponytail-gain`(벤치마크 스코어보드)은 옮기지 않았다. 전자는 `develop_rule/SKILL.md` 가 같은 역할을 하고 카드에 적힌 설정·업데이트 절차가 이 저장소에서는 동작하지 않기 때문이고, 후자는 업스트림이 측정한 벤치마크 중앙값이라 산출 근거가 여기 없기 때문이다. 두 기능이 필요하면 원본 저장소를 직접 쓰면 된다.
 <!-- skills:end -->
