@@ -4,7 +4,7 @@
 
 A curated collection of Claude Code skills, installable system-wide with a single command.
 
-[![skills](https://img.shields.io/badge/skills-3-8A2BE2?style=flat)](.claude/skills) [![contributors](https://img.shields.io/github/contributors/ash-hun/awesome_skills?style=flat&logo=github&color=blue)](https://github.com/ash-hun/awesome_skills/graphs/contributors) [![forks](https://img.shields.io/github/forks/ash-hun/awesome_skills?style=flat&logo=github&color=blue)](https://github.com/ash-hun/awesome_skills/network/members) [![stars](https://img.shields.io/github/stars/ash-hun/awesome_skills?style=flat&logo=github&color=yellow)](https://github.com/ash-hun/awesome_skills/stargazers) [![issues](https://img.shields.io/github/issues/ash-hun/awesome_skills?style=flat&logo=github&color=red)](https://github.com/ash-hun/awesome_skills/issues) [![last commit](https://img.shields.io/github/last-commit/ash-hun/awesome_skills?style=flat&logo=github)](https://github.com/ash-hun/awesome_skills/commits/main) [![license](https://img.shields.io/github/license/ash-hun/awesome_skills?style=flat&color=green)](LICENSE)
+[![skills](https://img.shields.io/badge/skills-6-8A2BE2?style=flat)](.claude/skills) [![contributors](https://img.shields.io/github/contributors/ash-hun/awesome_skills?style=flat&logo=github&color=blue)](https://github.com/ash-hun/awesome_skills/graphs/contributors) [![forks](https://img.shields.io/github/forks/ash-hun/awesome_skills?style=flat&logo=github&color=blue)](https://github.com/ash-hun/awesome_skills/network/members) [![stars](https://img.shields.io/github/stars/ash-hun/awesome_skills?style=flat&logo=github&color=yellow)](https://github.com/ash-hun/awesome_skills/stargazers) [![issues](https://img.shields.io/github/issues/ash-hun/awesome_skills?style=flat&logo=github&color=red)](https://github.com/ash-hun/awesome_skills/issues) [![last commit](https://img.shields.io/github/last-commit/ash-hun/awesome_skills?style=flat&logo=github)](https://github.com/ash-hun/awesome_skills/commits/main) [![license](https://img.shields.io/github/license/ash-hun/awesome_skills?style=flat&color=green)](LICENSE)
 
 </div>
 
@@ -12,11 +12,11 @@ A curated collection of Claude Code skills, installable system-wide with a singl
 
 ## 무엇인가
 
-[Claude Code](https://claude.com/claude-code)에사 유용하게 사용할 수 있는 **Custom Skill** 을 모아둔 저장소다. 설치하면 어느 디렉토리에서 Claude Code를 열든 모든 스킬이 로드된다.
+[Claude Code](https://claude.com/claude-code)에서 쓰는 **Custom Skill** 을 모아둔 저장소다. 설치하면 어느 디렉토리에서 Claude Code를 열든 모든 스킬이 로드된다.
 
-각 스킬은 `SKILL.md` 를 라우터로 두고 상세 절차를 `references/` 에 둔다. 트리거될 때 항상 읽히는 건 `SKILL.md` 뿐이라 컨텍스트를 적게 쓰고, 필요한 참조만 그때 읽는다. 부속 파일은 전부 스킬 디렉토리 안에 있어 저장소 바깥 경로에 의존하지 않는다.
+각 스킬은 `SKILL.md` 를 라우터로 두고 상세 절차를 `references/` 에 둔다. 트리거될 때 읽히는 건 `SKILL.md` 뿐이고 참조 문서는 필요한 때만 읽는다.
 
-**요구사항** — macOS 또는 Linux, `git`, `bash`. Claude Code가 이미 설치되어 있어야 한다.
+**요구사항**: macOS 또는 Linux, `git`, `bash`, 설치된 Claude Code.
 
 ---
 
@@ -26,35 +26,11 @@ A curated collection of Claude Code skills, installable system-wide with a singl
 curl -fsSL https://raw.githubusercontent.com/ash-hun/awesome_skills/main/install.sh | bash
 ```
 
-이 한 줄이 하는 일은 세 가지다.
-
 1. 저장소를 `~/.awesome-skills` 에 클론한다. 이미 있으면 최신 커밋으로 갱신한다.
 2. 각 스킬을 `~/.claude/skills/<name>` 으로 심볼릭 링크한다.
 3. 관리 명령어를 `~/.local/bin/awesome-skills` 에 설치한다.
 
-설치가 끝나면 Claude Code를 재시작해야 새 스킬이 목록에 잡힌다. `~/.local/bin` 이 `PATH` 에 없으면 설치 스크립트가 추가할 줄을 알려준다.
-
-파이프로 실행하는 스크립트를 그대로 믿기 어렵다면, 먼저 내용을 확인한 뒤 실행해도 된다.
-
-```bash
-curl -fsSL https://raw.githubusercontent.com/ash-hun/awesome_skills/main/install.sh -o install.sh
-less install.sh
-bash install.sh
-```
-
-### 설치 후 배치
-
-```
-~/.awesome-skills/                       # git clone
-├── install.sh
-├── bin/awesome-skills
-└── .claude/skills/<name>/SKILL.md
-
-~/.claude/skills/<name>      ->  ~/.awesome-skills/.claude/skills/<name>
-~/.local/bin/awesome-skills  ->  ~/.awesome-skills/bin/awesome-skills
-```
-
-실제 파일은 클론 한 곳에만 존재하고 `~/.claude/skills` 에는 링크만 놓인다. 따라서 `awesome-skills update` 한 번이면 모든 스킬이 함께 갱신되고, 클론에서 스킬을 직접 고치면 그 변경이 곧바로 전역에 반영된다.
+설치 후 Claude Code를 재시작해야 스킬이 목록에 잡힌다. 실제 파일은 클론 한 곳에만 있고 `~/.claude/skills` 에는 링크만 놓이므로, 클론에서 고친 내용은 곧바로 전역에 반영된다.
 
 ### 관리 명령어
 
@@ -63,45 +39,37 @@ bash install.sh
 | `awesome-skills link` | 심볼릭 링크를 만들거나 갱신한다 |
 | `awesome-skills update` | 최신 커밋을 받아온 뒤 다시 링크한다 |
 | `awesome-skills list` | 스킬별 링크 상태를 출력한다 |
-| `awesome-skills uninstall` | 이 도구가 만든 링크만 제거한다 |
-| `awesome-skills uninstall --purge` | 링크와 함께 `~/.awesome-skills` 클론까지 지운다 |
-| `awesome-skills brief [on\|off\|status]` | `humanism_talk` 의 압축 응답 모드를 모든 세션에 적용/해제 |
+| `awesome-skills uninstall [--purge]` | 이 도구가 만든 링크만 제거한다. `--purge` 는 클론까지 지운다 |
+| `awesome-skills brief [on\|off\|status]` | `humanism_talk` 의 `brief` 모드를 모든 세션에 적용하거나 해제한다 |
 
-모든 명령은 멱등이다. 여러 번 실행해도 한 번 실행한 것과 결과가 같다.
+모든 명령은 여러 번 실행해도 결과가 같다.
 
-### brief 모드 항상 켜기
-
-`humanism_talk` 스킬의 `brief` 모드(압축 응답 + 목표·인과·액션 구조)는 매번 부르지 않고 모든 세션에 자동으로 걸 수 있다.
+<details>
+<summary>brief 모드 항상 켜기</summary>
 
 ```bash
 awesome-skills brief on
 ```
 
-`~/.claude/settings.json` 에 `SessionStart` 와 `PostCompact` 훅을 등록한다. 새 세션이 시작될 때와 컨텍스트가 압축된 뒤에 `humanism_talk/references/brief.md` 의 규칙이 주입된다. 기존 설정과 다른 훅은 그대로 두고, 여러 번 실행해도 훅은 하나만 남는다. `jq` 가 필요하다.
+`~/.claude/settings.json` 에 `SessionStart` 와 `PostCompact` 훅을 등록해서, 세션이 시작될 때와 컨텍스트가 압축된 뒤에 `humanism_talk/references/brief.md` 의 규칙을 주입한다. 기존 설정과 다른 훅은 그대로 둔다. `jq` 가 필요하다. 설치 스크립트는 이 명령을 자동으로 실행하지 않는다.
 
-끄는 방법은 세 가지다.
-
-| 방법 | 범위 |
+| 끄는 방법 | 범위 |
 |---|---|
 | `awesome-skills brief off` | 훅 자체를 제거 |
 | `<project>/.claude/humanism_talk.off` 파일 생성 | 그 프로젝트에서만 무시 |
 | `~/.claude/humanism_talk.off` 파일 생성 | 훅은 두고 전역으로 무시 |
+| 세션에서 `"stop caveman"`, `"normal mode"`, `/humanism_talk off` | 그 세션에서만 해제 |
 
-세션 안에서 일시적으로 풀려면 `"stop caveman"`, `"normal mode"`, `/humanism_talk off` 라고 말하면 된다.
+</details>
 
-이 명령은 설치 스크립트가 자동으로 실행하지 않는다. `~/.claude/settings.json` 은 사용자 개인 설정이라 명시적으로 켤 때만 건드린다.
+<details>
+<summary>이름이 겹칠 때, 설정 파일, 환경 변수</summary>
 
-### 이름이 겹칠 때
+**이름이 겹칠 때**: `~/.claude/skills/<name>` 에 실제 디렉토리가 이미 있으면 그 스킬은 건너뛰고 목록을 출력한다. 직접 만든 전역 스킬을 덮어쓰지 않기 위해서다. 저장소 쪽을 쓰려면 그 디렉토리를 옮긴 뒤 `awesome-skills link` 를 다시 실행한다. `uninstall` 도 링크가 `~/.awesome-skills` 안을 가리킬 때만 지운다.
 
-`~/.claude/skills/<name>` 에 이미 **실제 디렉토리**가 있으면 그 스킬은 건너뛰고, 설치가 끝날 때 건너뛴 목록을 출력한다. 직접 작성한 전역 스킬을 덮어쓰지 않기 위한 동작이다. 저장소 쪽으로 넘기고 싶다면 그 디렉토리를 옮기거나 지운 뒤 `awesome-skills link` 를 다시 실행한다. 이미 심볼릭 링크인 경우에는 그대로 갱신한다.
+**설정 파일**: 설치 스크립트는 `~/.claude/settings.json` 을 건드리지 않는다. 이 저장소의 `.claude/settings.json` 에 등록된 [obra/superpowers](https://github.com/obra/superpowers) 플러그인을 쓰려면 Claude Code에서 직접 마켓플레이스를 추가한다.
 
-`uninstall` 도 같은 원칙을 따른다. 링크 대상이 `~/.awesome-skills` 안을 가리킬 때만 지우므로, 직접 만든 스킬과 다른 곳을 가리키는 링크는 그대로 남는다.
-
-### 설정 파일
-
-설치 스크립트는 `~/.claude/settings.json` 을 건드리지 않는다. 이 저장소의 `.claude/settings.json` 에 등록된 [obra/superpowers](https://github.com/obra/superpowers) 플러그인까지 쓰려면 Claude Code에서 직접 마켓플레이스를 추가해야 한다.
-
-### 환경 변수
+**환경 변수**
 
 | 변수 | 기본값 | 용도 |
 |---|---|---|
@@ -111,216 +79,210 @@ awesome-skills brief on
 | `AWESOME_SKILLS_REPO` | 이 저장소의 GitHub URL | 클론할 원격 (포크에서 쓸 때) |
 | `CLAUDE_CONFIG_DIR` | `~/.claude` | Claude Code 설정 디렉토리 |
 
+</details>
+
 ---
 
 <!-- skills:start -->
 ## 설치된 스킬
-
-여섯 개다. 모드나 단계가 있는 스킬은 인자로 고르거나 대화 문맥에서 자동으로 잡힌다. `refactoring_service` 만 명시 호출 전용이다.
 
 | 스킬 | 호출 | 한 줄 요약 | 출처 |
 |---|---|---|---|
 | [`common`](.claude/skills/common/SKILL.md) | `/common [create\|eval\|describe\|docs]` | 스킬 자체를 만들고 검증하고 문서화하는 메타 스킬 | [anthropics/skills](https://github.com/anthropics/skills) + 이 저장소 |
 | [`humanism_talk`](.claude/skills/humanism_talk/SKILL.md) | `/humanism_talk [brief\|grill\|off]` | 대화 규율. 응답을 압축하고, 계획을 라운드로 캐묻는다 | [JuliusBrussee/caveman](https://github.com/JuliusBrussee/caveman) + [mattpocock/skills](https://github.com/mattpocock/skills) |
 | [`develop_rule`](.claude/skills/develop_rule/SKILL.md) | `/develop_rule [lite\|full\|ultra\|review\|audit\|debt\|spec\|handoff]` | 재현 가능한 개발. 최소로 짓고, 두 번 돌려도 같게, 문서는 코드에서 유도 | [DietrichGebert/ponytail](https://github.com/DietrichGebert/ponytail) + [mattpocock/skills](https://github.com/mattpocock/skills) + 이 저장소 |
-| [`msg_check`](.claude/skills/msg_check/SKILL.md) | `/msg_check` | 커밋·PR·진행 보고 문안을 네 기준으로 검수하고 수정안을 낸다. 승인하면 커밋·PR 까지 | 이 저장소 |
-| [`research_kit`](.claude/skills/research_kit/SKILL.md) | `/research_kit` | AI 연구·실험 키트. 조사 → 설계 → 실행·로깅 → 분석·보고서를 재현 가능하게 잇는다 | 이 저장소 + Anthropic `deep-research` |
-| [`refactoring_service`](.claude/skills/refactoring_service/SKILL.md) | `/refactoring_service [설계문서 경로]` (명시 호출 전용) | 기존 서비스 코드를 리팩토링하고 as-is 대비 to-be 변경 문서를 반드시 남긴다 | 이 저장소 |
+| [`msg_check`](.claude/skills/msg_check/SKILL.md) | `/msg_check` | 커밋, PR, 진행 보고 문안을 네 기준으로 검수하고 수정안을 낸다 | 이 저장소 |
+| [`research_kit`](.claude/skills/research_kit/SKILL.md) | `/research_kit` | AI 연구와 실험 키트. 조사, 설계, 실행과 로깅, 분석과 보고서를 잇는다 | 이 저장소 + Anthropic `deep-research` |
+| [`refactoring_service`](.claude/skills/refactoring_service/SKILL.md) | `/refactoring_service [설계문서 경로]` | 기존 서비스를 리팩토링하고 as-is 대비 to-be 변경 문서를 남긴다 | 이 저장소 |
 
-모든 스킬이 `SKILL.md` 를 라우터로 두고 상세 절차는 `references/` 에 둔다. 트리거될 때 항상 읽히는 건 `SKILL.md` 뿐이고, 나머지는 해당 모드에 들어갈 때만 읽는다.
-
----
+`refactoring_service` 는 명시 호출 전용이다. 나머지는 대화 문맥에서도 자동으로 잡힌다.
 
 ## 스킬 상세
 
-### `common` — 스킬 라이프사이클
+<details>
+<summary><code>common</code>: 스킬 라이프사이클</summary>
 
-만들고 → 검증하고 → 이름표를 다듬고 → 문서에 올리는 네 단계를 한 흐름으로 잡는다. 도구가 따로 놀면 만들어놓고 검증을 건너뛰거나, 고쳐놓고 카탈로그를 안 고쳐 문서가 썩기 때문이다.
+스킬을 만들고, 검증하고, 트리거 문구를 다듬고, 문서에 올리는 네 단계를 한 흐름으로 잡는다. 각 모드는 끝날 때 다음 단계를 제안한다.
 
 | 모드 | 하는 일 |
 |---|---|
-| `create` | 의도 파악 → 인터뷰 → SKILL.md 초안 → 테스트 케이스 작성 |
-| `eval` | 테스트 실행 → 채점 → 브라우저 뷰어로 사람 리뷰 → 개선 루프 |
-| `describe` | 트리거 eval 쿼리 20개를 만들어 `description` 을 최적화 |
+| `create` | 의도 파악, 인터뷰, `SKILL.md` 초안, 테스트 케이스 작성 |
+| `eval` | 테스트 실행, 채점, 브라우저 뷰어로 사람 리뷰, 개선 루프 |
+| `describe` | 트리거 평가 쿼리를 만들어 `description` 을 최적화 |
 | `docs` | 이 README 의 카탈로그 구간을 갱신 |
 
-각 모드는 끝날 때 다음 단계를 **제안**한다. 강요하지 않는다 — "그냥 대충 만들어줘"라고 하면 그 말을 따른다. 다만 스킬 파일을 건드린 세션에서 README 가 옛날 내용이면 그 사실은 반드시 알린다.
+범위 밖: 스킬이 아닌 일반 코드와 문서 작성, `.skill` 패키징.
 
-문서를 쓸 때 `description` 을 그대로 베끼지 않는다. 그건 모델용 트리거 문구지 사람용 설명이 아니라서, 카탈로그를 만들 때는 모든 `SKILL.md` 의 **본문까지** 읽는다. 출처·라이선스는 추측하지 않고 LICENSE → frontmatter → GitHub API 순으로 확인하며, 끝내 모르면 빈칸으로 두고 보고한다.
+부속: `references/` 5개, `agents/` 3개, `scripts/` 9개, `assets/` 1개, `eval-viewer/`.
 
-범위 밖: 스킬이 아닌 일반 코드·문서 작성. `.skill` 패키징은 하지 않는다 — 이 저장소는 전역 설치 방식이라 커밋·푸시가 그 역할을 한다.
+</details>
 
-부속: `references/` 5개, `agents/` 3개(채점·블라인드 비교·분석), `scripts/` 8개, `eval-viewer/`.
+<details>
+<summary><code>humanism_talk</code>: 대화 규율</summary>
 
-### `humanism_talk` — 대화 규율
+말은 줄이고, 구조는 드러내고, 추측은 질문으로 바꾸고, 판단은 근거로 한다.
 
-말할 때와 물을 때를 같은 원칙으로 다룬다. **말은 줄이고, 구조는 드러내고, 추측은 질문으로 바꾸고, 판단은 근거로 한다.**
+**`brief`** (기본, 지속 모드): 필러, 인사치레, 헤지를 걷어내고, 실질적인 지시문은 실행 전에 세 요소로 분해해 보여준다.
 
-**`brief`** (기본, 지속 모드): 관사, 필러, 인사치레, 헤지를 걷어내고, 실질적인 지시문은 실행 *전에* 세 요소로 분해해 보여준다.
+- **목표**: 그 요청이 이루려는 최종 상태
+- **인과**: 맥락에서 원인, 원인에서 결과. 확인된 사실과 추정을 구분한다
+- **액션**: 동사로 시작하는 행동 목록. 사용자 몫은 `[사용자]` 표시
 
-- **목표**: 그 요청이 이루려는 최종 상태. 표면 요청을 그대로 베끼지 않는다.
-- **인과**: 맥락 → 원인 → 결과. 확인된 사실과 추정을 구분하고, 근거가 없으면 "미확인"이라 쓴다.
-- **액션**: 동사로 시작하는 행동 목록. 사용자 몫은 `[사용자]` 표시.
+함께 강제하는 태도는 셋이다. 물은 만큼만 답한다. 근거 없이 동의하지 않는다. 긴 대시, 가운뎃점, 지어낸 항목 번호 같은 말버릇을 쓰지 않는다. 부정어, 숫자, 코드, 사용자의 언어는 압축하지 않는다.
 
-실행이 끝나면 같은 라벨로 닫는다. 인과는 가설에서 실측으로 갱신되고, 액션은 남은 것만 남는다. 한 문장으로 끝나는 질문에는 3요소를 붙이지 않고 `"12개."` 로 끝낸다.
+**`grill`** (단발): 계획과 설계를 design tree 로 매핑하고, 지금 물을 수 있는 질문을 한 라운드에 모아 AskUserQuestion 으로 묻는다. 첫 선택지가 추천 답안이다. 사용자가 합의를 확인하기 전까지 실행하지 않는다.
 
-세 가지 태도를 함께 강제한다.
+해제: `/humanism_talk off`, `"stop caveman"`, `"normal mode"`.
 
-- **물은 만큼만**: 묻지 않은 배경, 대안 나열, "참고로" 단락을 붙이지 않는다. 선택지가 여럿이면 하나를 추천한다.
-- **근거 있는 판단**: 맞장구로 시작하지 않는다. 사용자의 전제가 틀렸으면 근거와 함께 말하고, 반박을 받아도 새 근거가 없으면 입장을 유지한다.
-- **말버릇 금지**: 긴 대시(—), 가운뎃점(·), 지어낸 항목 번호(L1, Q1, (1), Step 1)를 쓰지 않는다.
+</details>
 
-압축이 의미를 뒤집을 수 있는 것은 절대 건드리지 않는다: 부정어, 숫자와 단위와 버전, 코드와 에러 문자열, 사용자의 언어, 한국어 조사. 보안 경고와 비가역 작업 확인에서는 압축을 풀되 3요소는 유지한다. 채팅 밖으로 나가는 텍스트(커밋 메시지, 문서, PR 본문)에는 압축과 3요소를 적용하지 않지만 위 세 태도는 적용한다.
+<details>
+<summary><code>develop_rule</code>: 재현 가능한 개발</summary>
 
-**`grill`** (단발): 계획과 설계를 design tree 로 매핑하고, 선행 결정이 끝나 지금 물을 수 있는 질문들(frontier)을 한 라운드에 모아 AskUserQuestion 도구로 묻는다. 첫 선택지가 "(추천)" 답안이라 사용자는 고르거나 뒤집기만 하면 된다. 사실 확인은 서브에이전트가 하고 결정만 사용자에게 남긴다. frontier 가 비고 사용자가 합의를 확인하기 전까지 실행하지 않는다.
+같은 입력이면 같은 결과가 나와야 한다. 세 축으로 강제한다.
 
-두 모드는 이어져 있다. `brief` 의 인과에 "미확인"이 쌓이면 그게 곧 `grill` 의 질문 후보다.
+- **최소**: 안 지은 코드가 가장 재현 가능하다
+- **수렴**: 지은 것은 두 번 실행해도 같은 상태로 간다
+- **투영**: 문서는 코드에서 유도한다. 재생성해도 diff 가 없다
 
-해제: `/humanism_talk off`, `"stop caveman"`, `"normal mode"`. 프로젝트별로 끄려면 `<project>/.claude/humanism_talk.off` 파일을 만든다.
+지속 모드는 사다리를 탄다. 애초에 필요한가, 이미 코드베이스에 있나, 표준 라이브러리, 플랫폼 네이티브, 이미 설치된 의존성, 한 줄, 최소 구현 순으로 보고 처음 성립하는 칸에서 멈춘다. 강도는 `lite`, `full`(기본), `ultra`.
 
-### `develop_rule` — 재현 가능한 개발
+| 단발 모드 | 하는 일 |
+|---|---|
+| `review` | 지금의 diff 에서 과잉설계 찾기 |
+| `audit` | 저장소 전체의 과잉설계를 삭제량 큰 순으로 |
+| `debt` | `ponytail:` 과 `idempotent:` 마커를 장부로 수집 |
+| `spec` | `docs/api-spec.md`, `docs/screen-spec.md` 생성과 갱신 |
+| `handoff` | 대화를 인수인계 문서로 압축 |
 
-**같은 입력이면 같은 결과가 나와야 한다.** 이걸 세 축으로 강제한다.
+단순화하지 않는 것: 신뢰 경계의 입력 검증, 데이터 손실을 막는 에러 처리, 보안, 접근성 기본, 사용자가 명시적으로 요청한 것. `review` 와 `audit` 은 복잡도만 보며 정확성, 보안, 성능은 범위 밖이다.
 
-- **최소** — 안 지은 코드가 가장 재현 가능하다.
-- **수렴** — 지은 것은 두 번 실행해도 같은 상태로 간다.
-- **투영** — 문서는 코드에서 유도한다. 재생성해도 diff 가 없다.
+처음 켤 때 원칙 카드를 프로젝트의 `CLAUDE.md` 에 마커로 고정한다.
 
-지속 모드는 사다리를 강제한다. 처음 성립하는 칸에서 멈춘다: ① 애초에 필요한가(YAGNI) → ② 이미 코드베이스에 있나 → ③ 표준 라이브러리 → ④ 플랫폼 네이티브 → ⑤ 이미 설치된 의존성 → ⑥ 한 줄 → ⑦ 최소 구현. 강도는 `lite` / `full`(기본) / `ultra`.
+부속: `references/` 9개, `assets/` 3개.
 
-**사다리는 문제를 이해한 다음에 탄다.** 무엇을 건드리는지 모르는 채 고른 최소 변경은 게으른 게 아니라 두 번째 버그다. 버그는 증상이 아니라 근본 원인에서 고친다 — 공유 함수의 가드 하나가 호출자마다 다는 것보다 작은 diff다.
+</details>
 
-멱등성은 네 가지로 압축된다: 무엇이 "같은 것"인지 먼저 정의하고, 상태를 만들지 말고 맞추고, 어디서 죽어도 재실행이 답이 되게 하고, 확인과 변경 사이의 틈을 없앤다. 층마다 기법이 달라 `references/idempotency-{setup,code,api}.md` 로 갈린다. **층 하나만 처리하고 멱등하다고 선언하지 않는다** — 핸들러에 중복 방지를 넣고 DB 유니크 제약을 빼먹는 게 가장 흔한 실패다.
+<details>
+<summary><code>msg_check</code>: 작업 메시지 검수</summary>
 
-단발 모드:
-
-| 모드 | 하는 일 | 출력 |
-|---|---|---|
-| `review` | 지금의 diff 에서 과잉설계 찾기 | `L42: yagni: 구현체 하나뿐인 팩토리. 인라인.` → `net: -N lines possible.` |
-| `audit` | 레포 전체, 삭제량 큰 순 | 위와 같은 형식 + `-M deps` |
-| `debt` | `ponytail:` / `idempotent:` 마커를 장부로 수집 | 파일별 한 줄 + `no-trigger` 태그 |
-| `spec` | `docs/api-spec.md`, `docs/screen-spec.md` 생성·갱신 | 템플릿 두 개를 채운 문서 |
-| `handoff` | 대화를 인수인계 문서로 압축 | OS 임시 디렉토리에 저장 |
-
-`review` 와 `audit` 은 **복잡도만** 사냥한다. 정확성 버그, 보안, 성능은 명시적으로 범위 밖이고 일반 리뷰로 넘긴다.
-
-절대 단순화하지 않는 것: 신뢰 경계의 입력 검증, 데이터 손실을 막는 에러 처리, 보안, 접근성 기본, 사용자가 명시적으로 요청한 것.
-
-처음 켤 때 `assets/claude-md-card.md` 를 프로젝트의 `CLAUDE.md` 에 `<!-- develop_rule:start -->` 마커로 고정한다. 대화가 압축돼도 원칙이 살아남게 하기 위해서다. 마커가 이미 있으면 그 구간만 교체하므로 몇 번 실행해도 같은 파일이 된다.
-
-### `msg_check` — 작업 메시지 검수
-
-커밋 메시지, PR 제목·본문, 슬랙·데일리 진행 보고를 **맥락 없이 빠르게 읽는 독자** 입장에서 검수한다. 초안을 새로 쓰지 않는다 — 사용자가 쓴 문안이 입력이고, 지적 사항과 수정안이 출력이다.
+커밋 메시지, PR 제목과 본문, 진행 보고를 맥락 없이 빠르게 읽는 독자 입장에서 검수한다. 사용자가 쓴 문안이 입력이고 지적 사항과 수정안이 출력이다.
 
 | 기준 | 보는 것 |
 |---|---|
-| 가시성 | 첫 줄만 읽어도 무엇을 했는지 알 수 있는가, 섹션·불릿으로 나뉘었는가 |
-| 자연스러운 한국어 | "~를 진행했습니다", "~되어지다", "~에 대한" 같은 번역투 (`references/korean-style.md`) |
-| 과잉 설명 | 작업한 문제·기능 / 결과 / 특이사항 셋만 남았는가. 시행착오, 자기 평가, 파일 목록은 덜어낸다 |
-| 지칭 표현 | "그거", "해당 부분"을 diff·대화 맥락을 보고 독자가 알아볼 이름으로. 특정할 수 없으면 `<?>` 로 두고 묻는다 |
+| 가시성 | 첫 줄만 읽어도 무엇을 했는지 알 수 있는가 |
+| 자연스러운 한국어 | "~를 진행했습니다", "~되어지다" 같은 번역투 |
+| 과잉 설명 | 작업 내용, 결과, 특이사항 셋만 남았는가 |
+| 지칭 표현 | "그거", "해당 부분"을 독자가 알아볼 이름으로 |
 
-커밋은 Conventional Commits 에 한국어 명사형 요약(`fix(auth): JWT 만료 경계값 검사 수정`). 수정안은 원문에 없는 사실을 채우지 않고, 원문의 조건·불확실성도 지우지 않는다. 커밋·PR 은 AskUserQuestion 으로 승인받은 뒤에만 실행하며 `--no-verify` 는 쓰지 않는다. 범위 밖: 초안 작성, 코드 리뷰, 이슈·릴리스 노트.
+수정안은 원문에 없는 사실을 채우지 않는다. 커밋과 PR 은 AskUserQuestion 으로 승인받은 뒤에만 실행한다.
 
-### `research_kit` — AI 연구·실험 키트
+범위 밖: 초안 작성, 코드 리뷰, 이슈와 릴리스 노트.
 
-LLM 평가, 비교대조 실험, 모델 학습, 새 가설 탐색을 네 단계로 다룬다. 사용자가 있는 단계부터 시작하고, 산출물은 `research/<slug>/` 한 폴더에 모은다.
+부속: `references/` 4개, `evals/`.
+
+</details>
+
+<details>
+<summary><code>research_kit</code>: AI 연구와 실험 키트</summary>
+
+LLM 평가, 비교대조 실험, 모델 학습, 새 가설 탐색을 네 단계로 다룬다. 사용자가 있는 단계부터 시작하고 산출물은 `research/<slug>/` 에 모은다.
 
 | 단계 | 산출물 | 핵심 |
 |---|---|---|
-| 1. 질문·선행 조사 | `survey.md` | **light**(기본, 직접 검색 5~8회) / **full**(논문 작성 시, 조사 서브에이전트 병렬) |
-| 2. 가설·실험 설계 | `design.md` | 반증 가능한 가설, 한 번에 한 변수, 판정 기준을 실행 전에 숫자로 |
-| 3. 실행·로깅 | `runs/<run-id>/card.md` | config·git hash·seed·환경을 실험 카드에 기록 (`scripts/snapshot_env.sh`) |
-| 4. 분석·보고서 | `analysis.md`, `report.md` | 쌍체 bootstrap·McNemar(표준 라이브러리만), 지지/기각/판정 불가 |
+| 질문과 선행 조사 | `survey.md` | light(기본, 직접 검색) 또는 full(조사 서브에이전트 병렬) |
+| 가설과 실험 설계 | `design.md` | 반증 가능한 가설, 한 번에 한 변수, 판정 기준을 실행 전에 숫자로 |
+| 실행과 로깅 | `runs/<run-id>/card.md` | config, git hash, seed, 환경을 실험 카드에 기록 |
+| 분석과 보고서 | `analysis.md`, `report.md` | 쌍체 bootstrap, McNemar. 지지, 기각, 판정 불가로 판정 |
 
-실험 카드를 채울 수 없는 실행(커밋 안 된 코드 등)은 탐색으로만 쓰고 보고서 근거로 쓰지 않는다. 숫자는 실행 결과나 출처 있는 문헌에서만 나온다. 범위 밖: 연구와 무관한 웹 조사, 논문 원고 조판, 학습 인프라 구축.
+숫자는 실행 결과나 출처 있는 문헌에서만 나온다.
 
-부속: `references/` 5개, `assets/` 템플릿 3개, `scripts/snapshot_env.sh`.
+범위 밖: 연구와 무관한 웹 조사, 논문 원고 조판, 학습 인프라 구축.
 
-### `refactoring_service`: 서비스 리팩토링과 변경 문서
+부속: `references/` 5개, `assets/` 3개, `scripts/snapshot_env.sh`, `evals/`.
 
-이미 만들어진 서비스의 구조를 동작 변경 없이 바꾸고, 무엇을 왜 바꿨는지 문서로 남긴다. `/refactoring_service` 로 직접 호출할 때만 실행된다. 설계문서 경로를 인자로 주면 그 문서대로, 주지 않으면 기본 방안(영속성 있는 운영 구조, 확장성을 고려한 구조)으로 간다. 기본 방안은 점검 목록이라 현재 코드에서 증상이 관찰되는 항목만 적용한다.
+</details>
 
-1. 방향 확정 (설계문서 또는 `references/default-plan.md`, 그리고 항상 `references/code-rules.md`)
+<details>
+<summary><code>refactoring_service</code>: 서비스 리팩토링과 변경 문서</summary>
+
+이미 만들어진 서비스의 구조를 동작 변경 없이 바꾸고, 무엇을 왜 바꿨는지 문서로 남긴다. 설계문서 경로를 인자로 주면 그 문서대로, 주지 않으면 기본 방안(영속성 있는 운영 구조, 확장성을 고려한 구조)으로 간다.
+
+1. 방향 확정
 2. as-is 분석. 기존 테스트는 하나씩 읽고 의도를 정리한다
-3. 모듈별 계획을 보여주고 AskUserQuestion 으로 승인받는다. 승인 전에는 코드를 고치지 않는다
-4. 기존 테스트와 mypy 로 기준선을 잡고, 테스트가 없는 영역은 현재 동작을 고정하는 특성 테스트를 먼저 쓴다
+3. 모듈별 계획을 보여주고 승인받는다. 승인 전에는 코드를 고치지 않는다
+4. 기존 테스트와 mypy 로 기준선을 잡고, 테스트가 없는 영역은 현재 동작을 고정하는 테스트를 먼저 쓴다
 5. 모듈 단위로 리팩토링하고 단위마다 테스트를 돌린다
 6. 전체 테스트, mypy, 의존 방향을 기준선과 비교한다
 7. 변경 문서를 쓴다
 
-구조와 별개로 손대는 Python 코드 전부에 코드 규칙을 적용한다.
+손대는 Python 코드에는 항상 코드 규칙을 적용한다.
 
 | 규칙 | 내용 |
 |---|---|
-| 호출 계층과 모듈명 | 의존은 한 방향. import 경로만 읽고 역할을 알 수 있게 `<대상>_<역할>.py` 로 짓는다 |
-| 멱등성과 공통 모듈 | 두 번 실행해도 같은 상태. 재사용되는 것은 `common/` 으로, logger 는 반드시 공통 모듈 |
+| 호출 계층과 모듈명 | 의존은 한 방향. import 경로만 읽고 역할을 알 수 있게 짓는다 |
+| 멱등성과 공통 모듈 | 재사용되는 것은 `common/` 으로. logger 는 반드시 공통 모듈 |
 | 타입 힌트 | 모든 함수의 인자와 반환값에 필수 |
-| 객체화와 상속 | 기능 관점의 추상화를 적극적으로. 상태와 의존은 클래스로 묶고 생성자로 주입. 추상 클래스는 가급적 쓰지 않고 상속 깊이 1에서 2 권장 |
-| 파일 최상단 주석 | 전체 프로젝트 관점에서 이 모듈이 무엇인지 쓰는 모듈 docstring |
-| 테스트 | `tests/unit/`(모듈별)과 `tests/integ/`(API 수준 시나리오 e2e)로 분리하고 둘 다 통과. 기존 테스트의 의도를 보존 |
+| 객체화와 상속 | 기능 관점의 추상화를 적극적으로. 추상 클래스는 가급적 쓰지 않고 상속 깊이 1에서 2 |
+| 파일 최상단 주석 | 전체 프로젝트 관점에서 이 모듈이 무엇인지 쓴다 |
+| 테스트 | `tests/unit/`(모듈별)과 `tests/integ/`(API 수준 시나리오 e2e). 둘 다 통과 |
 | 도구 | uv, pytest, mypy |
-| OpenAPI 문서 | FastAPI 기준. 엔드포인트마다 기능 설명, 인자 설명, 사용 예제. 과한 설명 금지 |
+| OpenAPI 문서 | FastAPI 기준. 기능 설명, 인자 설명, 사용 예제 |
 
-코드 규칙이 다루지 않는 판단과 Python 외 코드는 `develop_rule` 을 기본으로 따른다. 설계문서와 코드 규칙이 부딪히면 임의로 고르지 않고 AskUserQuestion 으로 묻는데, 프로젝트, 구조, 모듈, 충돌, 영향 순으로 위에서 아래로 설명한 뒤에 선택지를 낸다.
+설계문서와 코드 규칙이 부딪히면 프로젝트 전체에서 해당 모듈까지 위에서 아래로 설명한 뒤 사용자에게 묻는다. 코드 규칙이 다루지 않는 판단은 `develop_rule` 을 따른다.
 
-변경 문서는 대상 서비스의 `docs/refactoring/YYYY-MM-DD-<서비스명>.md` 에 저장하고 구조는 고정이다: 개요(날짜, 작성자, 기준, 검증 결과) / 리팩토링 내용(모듈별 문단, 전과 후 비교) / 비고 및 특이사항.
+변경 문서는 대상 서비스의 `docs/refactoring/YYYY-MM-DD-<서비스명>.md` 에 저장하고 구조는 개요, 리팩토링 내용(모듈별 전후 비교), 비고 및 특이사항으로 고정이다.
 
-범위 밖: 새 기능 추가, 버그 수정, 커밋과 푸시. 작업 중 발견한 버그는 고치지 않고 비고에 적는다.
+범위 밖: 새 기능 추가, 버그 수정, 커밋과 푸시.
 
-부속: `references/code-rules.md`, `references/default-plan.md`, `assets/change-doc-template.md`, `evals`.
+부속: `references/` 2개, `assets/` 1개, `evals/`.
 
----
+</details>
 
 ## 디렉토리 구조
 
 ```
 awesome_skills/
-├── install.sh                     # 부트스트랩 (clone/pull → link)
+├── install.sh                     # 부트스트랩 (클론 또는 갱신 후 링크)
 ├── bin/awesome-skills             # link / update / list / uninstall / brief
-├── hooks/inject-brief.sh          # SessionStart·PostCompact 에 brief 규칙 주입
+├── hooks/inject-brief.sh          # SessionStart, PostCompact 에 brief 규칙 주입
 └── .claude/
     ├── settings.json              # 마켓플레이스, 플러그인 활성화
     └── skills/
-        ├── common/                # SKILL.md + references(5) + agents(3) + scripts(8) + eval-viewer
-        ├── humanism_talk/         # SKILL.md + references/brief.md + README.md
+        ├── common/                # SKILL.md + references(5) + agents(3) + scripts(9) + assets(1) + eval-viewer
+        ├── humanism_talk/         # SKILL.md + references(1) + README.md
         ├── develop_rule/          # SKILL.md + references(9) + assets(3)
         ├── msg_check/             # SKILL.md + references(4) + evals
         ├── research_kit/          # SKILL.md + references(5) + assets(3) + scripts(1) + evals
         └── refactoring_service/   # SKILL.md + references(2) + assets(1) + evals
 ```
 
-`.claude/settings.json` 에는 스킬 외에 [obra/superpowers](https://github.com/obra/superpowers) 플러그인이 마켓플레이스 경유로 활성화되어 있다. 로컬 `SKILL.md` 가 아니라 플러그인이므로 위 목록과는 별개로 관리된다.
-
----
+`.claude/settings.json` 에 활성화된 [obra/superpowers](https://github.com/obra/superpowers) 는 로컬 `SKILL.md` 가 아니라 플러그인이라 위 목록과 별개로 관리된다.
 
 ## 스킬 추가하기
 
-이 저장소는 스킬 수를 적게 유지하는 것을 목표로 한다. 새 기능은 대개 **새 스킬이 아니라 기존 스킬의 모드**로 붙는 편이 맞다. 스킬이 늘어나면 모델이 어느 것을 켤지 헷갈리고, 그게 곧 트리거 정확도 하락이다.
+새 기능은 먼저 기존 스킬의 모드로 붙일 수 있는지 본다. 스킬이 늘어나면 모델이 어느 것을 켤지 헷갈려 트리거 정확도가 떨어진다. 새 스킬이 맞다면 `/common create` 로 시작한다.
 
-그래도 새 스킬이 필요하면 `/common create` 로 시작한다. 인터뷰 → 초안 → 테스트 케이스까지 안내한다. 확인할 것:
+- **frontmatter**: `name` 은 디렉토리 이름과 같아야 한다. `description` 은 모델이 언제 켤지 판단하는 근거다.
+- **참조 파일**: 스크립트와 템플릿은 스킬 디렉토리 안에 두고 상대 경로로 참조한다.
+- **이름 보존**: 기존 스킬을 고칠 때 이름을 바꾸지 않는다.
 
-- **frontmatter** — `name` 은 디렉토리 이름과 같아야 한다. `description` 은 모델이 언제 켤지 판단하는 근거이므로 트리거 문구를 구체적으로 쓴다.
-- **참조 파일** — 스크립트·템플릿은 스킬 디렉토리 안에 두고 상대 경로로 참조한다. 저장소 바깥 경로에 의존하면 전역 설치가 깨진다.
-- **이름 보존** — 기존 스킬을 고칠 때 이름을 바꾸지 않는다. 이름이 바뀌면 수정이 아니라 새 스킬이고, 전역 설치에서는 둘이 트리거를 두고 경쟁한다.
+작업이 끝나면 `/common docs` 로 이 카탈로그를 갱신하고, 커밋과 푸시 후 `awesome-skills update` 로 전역에 반영한다.
 
-작업이 끝나면 `/common docs` 로 이 카탈로그를 갱신하고, 커밋·푸시한 뒤 `awesome-skills update` 로 전역에 반영한다.
+## 크레딧
 
----
-
-## 라이선스 / 크레딧
-
-이 스킬들은 기존 오픈소스 스킬들을 실사용 케이스 기준으로 재구성한 것이다. 원저작권은 각 원저작자에게 있다.
+기존 오픈소스 스킬을 실사용 기준으로 재구성했다. 원저작권은 각 원저작자에게 있다.
 
 | 출처 | 라이선스 | 흡수된 곳 |
 |---|---|---|
-| [anthropics/skills](https://github.com/anthropics/skills) — `skill-creator` | Apache-2.0 ([전문](.claude/skills/common/LICENSE.txt)) | `common` 의 `create` / `eval` / `describe` |
-| [DietrichGebert/ponytail](https://github.com/DietrichGebert/ponytail) | MIT | `develop_rule` 의 최소 축, `review` / `audit` / `debt` |
+| [anthropics/skills](https://github.com/anthropics/skills) `skill-creator` | Apache-2.0 ([전문](.claude/skills/common/LICENSE.txt)) | `common` 의 `create`, `eval`, `describe` |
+| [DietrichGebert/ponytail](https://github.com/DietrichGebert/ponytail) | MIT | `develop_rule` 의 최소 축, `review`, `audit`, `debt` |
 | [JuliusBrussee/caveman](https://github.com/JuliusBrussee/caveman) | MIT | `humanism_talk` 의 `brief` |
 | [mattpocock/skills](https://github.com/mattpocock/skills) | MIT | `humanism_talk` 의 `grill`, `develop_rule` 의 `handoff` |
-| Anthropic `deep-research` 스킬 (Claude 내장) | 미확인 | `research_kit` 1단계 full 조사 절차 — 원문을 옮기지 않고 연구 문헌용으로 다시 씀 |
-| 이 저장소 | MIT | `common` 의 `docs`, `develop_rule` 의 수렴·투영 축, `msg_check`, `research_kit`, `refactoring_service` |
+| Anthropic `deep-research` 스킬 (Claude 내장) | 미확인 | `research_kit` 의 full 조사 절차. 원문을 옮기지 않고 다시 씀 |
+| 이 저장소 | MIT | `common` 의 `docs`, `develop_rule` 의 수렴과 투영 축, `msg_check`, `research_kit`, `refactoring_service` |
 
-업스트림에서 가져오지 않은 것도 밝혀둔다. `ponytail-help`(레퍼런스 카드)과 `ponytail-gain`(벤치마크 스코어보드)은 옮기지 않았다. 전자는 `develop_rule/SKILL.md` 가 같은 역할을 하고 카드에 적힌 설정·업데이트 절차가 이 저장소에서는 동작하지 않기 때문이고, 후자는 업스트림이 측정한 벤치마크 중앙값이라 산출 근거가 여기 없기 때문이다. 두 기능이 필요하면 원본 저장소를 직접 쓰면 된다.
+ponytail 의 `ponytail-help` 와 `ponytail-gain` 은 옮기지 않았다. 필요하면 원본 저장소를 쓴다.
 <!-- skills:end -->
 
 ---
@@ -329,16 +291,12 @@ awesome_skills/
 
 스킬 추가, 문서 수정, 버그 제보 모두 환영한다.
 
-1. 저장소를 포크한다.
-2. 먼저 기존 세 스킬의 **모드로 붙일 수 있는지** 본다. 스킬이 늘어나면 모델이 어느 것을 켤지 헷갈리고 그게 곧 트리거 정확도 하락이다. 새 스킬이 맞다면 `/common create` 로 시작한다. frontmatter의 `name` 은 디렉토리 이름과 같아야 한다.
-3. 외부에서 가져온 스킬이라면 원저작자와 라이선스를 PR 본문에 밝힌다. 라이선스가 MIT/Apache-2.0 계열이 아니면 먼저 이슈로 논의해달라.
-4. `awesome-skills link` 를 실행하고 Claude Code를 재시작해 스킬 목록에 잡히는지 확인한 뒤 PR을 연다.
-5. README의 스킬 카탈로그는 `/common docs` 로 갱신한다. 카탈로그 마커 사이 구간만 교체되므로 직접 손으로 쓴 부분은 남는다.
+1. 저장소를 포크하고 위 **스킬 추가하기** 를 따라 작업한다.
+2. 외부에서 가져온 스킬이면 원저작자와 라이선스를 PR 본문에 밝힌다. MIT, Apache-2.0 계열이 아니면 먼저 이슈로 논의한다.
+3. `awesome-skills link` 실행 후 Claude Code를 재시작해 스킬이 목록에 잡히는지 확인하고 PR 을 연다.
 
 버그 제보와 스킬 제안은 [Issues](https://github.com/ash-hun/awesome_skills/issues)로.
 
 ## 라이선스
 
-이 저장소의 설치 스크립트와 자체 작성 스킬은 [MIT 라이선스](LICENSE)를 따른다.
-
-외부에서 가져온 스킬의 저작권은 원저작자에게 있다. 출처와 라이선스는 위 카탈로그의 **라이선스 / 크레딧** 항목에 정리되어 있다.
+설치 스크립트와 자체 작성 스킬은 [MIT 라이선스](LICENSE)를 따른다. 외부에서 가져온 스킬의 저작권은 원저작자에게 있으며 출처는 위 **크레딧** 표에 있다.
