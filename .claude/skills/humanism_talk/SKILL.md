@@ -4,11 +4,11 @@ description: >
   사람과 주고받는 대화의 규율. 두 모드가 있다. `brief` 는 응답을 압축하고 모든 지시문을
   목표, 인과, 액션 세 요소로 분해해 보여주는 지속 모드다. 물은 만큼만 답하고, 근거 없이
   동의하지 않고, 긴 대시나 가운뎃점이나 지어낸 항목 번호 같은 모델 말버릇을 쓰지 않는다.
-  `grill` 은 계획, 설계, 결정을 design tree 로 매핑해 라운드 단위로 AskUserQuestion 으로
-  캐묻는 단발 모드다. Use when the user says "간결하게", "토큰 줄여", "짧게 답해",
+  `grill` 은 계획이 실패했다고 가정하는 premortem 으로 숨은 결정을 찾고, 계획, 설계, 결정을
+  design tree 로 매핑해 라운드 단위로 AskUserQuestion 으로 캐묻는 단발 모드다. Use when the user says "간결하게", "토큰 줄여", "짧게 답해",
   "caveman", "brief mode", "be brief", "less tokens", or when they want their thinking
   stress-tested ("계획 검증해줘", "이 설계 괜찮은지 캐물어봐", "압박 질문", "grill me",
-  "stress-test this plan", "poke holes in this"), or invokes /humanism_talk.
+  "stress-test this plan", "poke holes in this", "premortem", "어디서 망할지 찾아줘", "실패 시나리오"), or invokes /humanism_talk.
 ---
 
 # Humanism Talk: 대화 규율
@@ -41,8 +41,9 @@ description: >
 - **액션**:
   - 동사로 시작하는 행동. 대상 파일, 라인, 명령 명시.
   - 사용자가 직접 해야 하는 항목은 `[사용자]` 표시.
+  - 되돌릴 수 없는 항목은 `[비가역]` 표시. 이때 인과 끝에 가장 그럴듯한 실패 경로를 한 줄 붙인다.
 
-도구를 호출하기 전에 이 블록을 먼저 내고, 실행이 끝나면 같은 라벨로 닫는다. 마무리 블록에서 목표는 바뀐 경우에만, 인과는 실측으로, 액션은 남은 것만 쓴다.
+도구를 호출하기 전에 이 블록을 먼저 내고, 실행이 끝나면 같은 라벨로 닫는다. 마무리 블록에서 목표는 바뀐 경우에만, 인과는 실측으로, 액션은 남은 것만 쓴다. 실측 후에도 추정이 남으면 무엇을 보면 다시 판단할지 재검토 조건을 액션에 한 줄 둔다.
 
 ### 참조를 읽기 전에도 지켜야 하는 것
 
@@ -62,11 +63,29 @@ description: >
 
 채팅 밖으로 나가는 텍스트(코드, 주석, 커밋 메시지, 문서, PR 본문, 메모리 파일)에는 압축도 3요소도 적용하지 않고 일반 산문으로 쓴다. 단, 위 세 가지는 그곳에도 적용한다.
 
+### 한국어 산문을 쓸 때
+
+사람이 읽을 한국어 문서(README, PR 본문, 메일, 블로그, 강의 자료, 발표 자료)를 쓰거나 검수할 때는 **`references/writing_style.md` 를 읽는다.** 번역투, 비유 직역, 일본어 투, AI 상투구, 형식명사 종결, 거친 구어 동사의 사전과 허용 횟수, 게시 전 grep 점검 명령이 있다. 코드와 코드 주석은 대상이 아니다.
+
 ## grill: 라운드 심문
 
 공유된 이해에 도달할 때까지 사용자를 캐묻는다. 대상을 **design tree** 로 매핑한다. 모든 결정은 그 아래 매달린 결정들로 갈라진다.
 
 트리를 **라운드** 단위로 판다. **frontier** 는 선행 결정이 이미 정해져서 지금 물을 수 있는 결정들이다. 아직 못 들은 답을 짐작하지 않고도 물을 수 있는 질문이다. 한 라운드에 frontier 를 묻고 사용자의 답을 기다린다.
+
+### 시작 전: premortem
+
+첫 라운드를 묻기 전에 계획이 실패했다고 가정하고 원인을 거꾸로 찾는다. "몇 달 뒤 이 계획은 완전히 실패했다. 무엇 때문이었나." 사용자는 자기 계획의 성공 경로만 보고 있기 쉽다. 실패 원인에서 출발하면 사용자가 아직 내리지 않은 결정이 드러난다.
+
+- 실패 원인을 5~8개 낸다. 실행, 기술, 외부 환경, 사람, 깔린 가정에서 고루 찾는다. "그럴 리 없다"로 걸러내지 않는다. 불편한 가능성(핵심 담당자 이탈, 전제가 틀림)도 넣는다.
+- "뭔가 잘못됨"이 아니라 "마이그레이션 중 기존 행의 NULL 값 때문에 제약이 깨짐"처럼 구체로 쓴다.
+- 원인마다 갈 곳을 정한다.
+  - 막는 결정이 트리에 이미 있다: 버린다.
+  - 막는 결정이 트리에 없다: 결정 노드로 트리에 추가한다. frontier 에 오면 질문이 된다.
+  - 환경에서 확인할 사실이다: 서브에이전트로 확인한다. 사용자에게 묻지 않는다.
+- 사용자에게는 원인 목록 전체가 아니라, 트리에 추가된 결정과 그 이유가 된 실패 원인만 짧게 보여준다.
+
+frontier 가 비어 심문을 끝낼 때, 결정으로 막지 못하고 남은 위험이 있으면 위험마다 조기 경보 신호(무엇이 보이면 이 위험이 현실이 되는 중인지)를 한 줄씩 적는다.
 
 ### 질문은 AskUserQuestion 으로
 
@@ -104,4 +123,5 @@ frontier 가 비면 끝이다. design tree 의 모든 가지를 밟았고, 조�
 ## 크레딧
 
 - `brief`: [JuliusBrussee/caveman](https://github.com/JuliusBrussee/caveman) (MIT) 의 압축 모드를 개량. 원본의 6단계 강도를 단일 모드로 고정하고 목표, 인과, 액션 구조를 더했다.
-- `grill`: [mattpocock/skills](https://github.com/mattpocock/skills) (MIT) 의 `grilling`.
+- `grill`: [mattpocock/skills](https://github.com/mattpocock/skills) (MIT) 의 `grilling`. 시작 전 premortem 은 [neurofoo/agent-skills](https://github.com/neurofoo/agent-skills) (MIT) 의 `premortem`.
+- `brief` 의 가역성 표시와 재검토 조건: [dvy1987/agent-loom](https://github.com/dvy1987/agent-loom) (MIT) 의 `ooda`.
