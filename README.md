@@ -91,6 +91,7 @@ awesome-skills brief on
 | [`common`](.claude/skills/common/SKILL.md) | `/common [create\|eval\|describe\|docs]` | 스킬 자체를 만들고 검증하고 문서화하는 메타 스킬 | [anthropics/skills](https://github.com/anthropics/skills) + 이 저장소 |
 | [`humanism_talk`](.claude/skills/humanism_talk/SKILL.md) | `/humanism_talk [brief\|grill\|off]` | 대화 규율. 응답을 압축하고, 계획을 라운드로 캐묻는다 | [JuliusBrussee/caveman](https://github.com/JuliusBrussee/caveman) + [mattpocock/skills](https://github.com/mattpocock/skills) |
 | [`develop_rule`](.claude/skills/develop_rule/SKILL.md) | `/develop_rule [lite\|full\|ultra\|review\|audit\|debt\|spec\|handoff]` | 재현 가능한 개발. 최소로 짓고, 두 번 돌려도 같게, 문서는 코드에서 유도 | [DietrichGebert/ponytail](https://github.com/DietrichGebert/ponytail) + [mattpocock/skills](https://github.com/mattpocock/skills) + 이 저장소 |
+| [`aar`](.claude/skills/aar/SKILL.md) | `/aar` | 끝난 작업을 네 질문으로 회고하고, 교훈을 다음 세션이 읽는 파일에 반영한다 | [coopersimson96/aar-loop](https://github.com/coopersimson96/aar-loop) + [neurofoo/agent-skills](https://github.com/neurofoo/agent-skills) |
 | [`msg_check`](.claude/skills/msg_check/SKILL.md) | `/msg_check` | 커밋, PR, 진행 보고 문안을 네 기준으로 검수하고 수정안을 낸다 | 이 저장소 |
 | [`research_kit`](.claude/skills/research_kit/SKILL.md) | `/research_kit` | AI 연구와 실험 키트. 조사, 설계, 실행과 로깅, 분석과 보고서를 잇는다 | 이 저장소 + Anthropic `deep-research` |
 | [`refactoring_service`](.claude/skills/refactoring_service/SKILL.md) | `/refactoring_service [설계문서 경로]` | 기존 서비스를 리팩토링하고 as-is 대비 to-be 변경 문서를 남긴다 | 이 저장소 |
@@ -126,13 +127,30 @@ awesome-skills brief on
 
 - **목표**: 그 요청이 이루려는 최종 상태
 - **인과**: 맥락에서 원인, 원인에서 결과. 확인된 사실과 추정을 구분한다
-- **액션**: 동사로 시작하는 행동 목록. 사용자 몫은 `[사용자]` 표시
+- **액션**: 동사로 시작하는 행동 목록. 사용자 몫은 `[사용자]`, 되돌릴 수 없는 항목은 `[비가역]` 표시
+
+`[비가역]` 항목이 있으면 인과에 실패 경로를 한 줄 붙이고, 실행 뒤에도 추정이 남으면 무엇을 보면 다시 판단할지 재검토 조건을 남긴다.
 
 함께 강제하는 태도는 셋이다. 물은 만큼만 답한다. 근거 없이 동의하지 않는다. 긴 대시, 가운뎃점, 지어낸 항목 번호 같은 말버릇을 쓰지 않는다. 부정어, 숫자, 코드, 사용자의 언어는 압축하지 않는다.
 
-**`grill`** (단발): 계획과 설계를 design tree 로 매핑하고, 지금 물을 수 있는 질문을 한 라운드에 모아 AskUserQuestion 으로 묻는다. 첫 선택지가 추천 답안이다. 사용자가 합의를 확인하기 전까지 실행하지 않는다.
+한국어 문장은 번역투, 형식명사 종결, AI 상투구, 비유 직역, 거친 구어 동사를 피한다. 문서나 PR 본문을 쓸 때는 표현 사전과 grep 점검 절차(`references/writing_style.md`)를 따른다.
+
+**`grill`** (단발): 먼저 premortem 으로 계획이 실패했다고 가정하고 원인을 찾아, 아직 내리지 않은 결정을 드러낸다. 그다음 계획과 설계를 design tree 로 매핑하고, 지금 물을 수 있는 질문을 한 라운드에 모아 AskUserQuestion 으로 묻는다. 첫 선택지가 추천 답안이다. 사용자가 합의를 확인하기 전까지 실행하지 않는다.
 
 해제: `/humanism_talk off`, `"stop caveman"`, `"normal mode"`.
+
+</details>
+
+<details>
+<summary><code>aar</code>: 작업 회고</summary>
+
+끝난 작업이나 세션을 After Action Review 네 질문(무엇을 기대했나, 실제로 무엇이 일어났나, 왜 달랐나, 다음엔 무엇을 하나)으로 돌아본다. 대화 기록, 에러, git 이력을 근거로 쓴다.
+
+특정 도구, 명령, 파일, 조건이 들어간 교훈만 남기고, 다음 세션이 같은 실수를 반복할 교훈은 수정 계획으로 만든다. 반영 대상은 프로젝트 `CLAUDE.md`, 해당 스킬의 `SKILL.md`, Claude Code 메모리 중 범위에 맞는 곳이다. 별도 LESSONS 파일은 만들지 않는다. 대상 파일과 넣을 문장을 제시하고 승인받은 뒤에만 고친다.
+
+범위 밖: 프로덕션 장애의 공식 포스트모템 문서, 코드 리뷰.
+
+부속: `evals/`.
 
 </details>
 
@@ -250,7 +268,8 @@ awesome_skills/
     ├── settings.json              # 마켓플레이스, 플러그인 활성화
     └── skills/
         ├── common/                # SKILL.md + references(5) + agents(3) + scripts(9) + assets(1) + eval-viewer
-        ├── humanism_talk/         # SKILL.md + references(1) + README.md
+        ├── humanism_talk/         # SKILL.md + references(2) + README.md
+        ├── aar/                   # SKILL.md + README.md + evals
         ├── develop_rule/          # SKILL.md + references(9) + assets(3)
         ├── msg_check/             # SKILL.md + references(4) + evals
         ├── research_kit/          # SKILL.md + references(5) + assets(3) + scripts(1) + evals
@@ -278,6 +297,9 @@ awesome_skills/
 | [anthropics/skills](https://github.com/anthropics/skills) `skill-creator` | Apache-2.0 ([전문](.claude/skills/common/LICENSE.txt)) | `common` 의 `create`, `eval`, `describe` |
 | [DietrichGebert/ponytail](https://github.com/DietrichGebert/ponytail) | MIT | `develop_rule` 의 최소 축, `review`, `audit`, `debt` |
 | [JuliusBrussee/caveman](https://github.com/JuliusBrussee/caveman) | MIT | `humanism_talk` 의 `brief` |
+| [coopersimson96/aar-loop](https://github.com/coopersimson96/aar-loop) | MIT | `aar` 의 네 질문, 교훈 기준, 수정 계획 절차. 기록 스크립트는 옮기지 않음 |
+| [neurofoo/agent-skills](https://github.com/neurofoo/agent-skills) | MIT | `aar` 의 유지와 개선 구분, `humanism_talk` 의 `grill` premortem |
+| [dvy1987/agent-loom](https://github.com/dvy1987/agent-loom) `ooda` | MIT | `humanism_talk` 의 `brief` 가역성 표시와 재검토 조건 |
 | [mattpocock/skills](https://github.com/mattpocock/skills) | MIT | `humanism_talk` 의 `grill`, `develop_rule` 의 `handoff` |
 | Anthropic `deep-research` 스킬 (Claude 내장) | 미확인 | `research_kit` 의 full 조사 절차. 원문을 옮기지 않고 다시 씀 |
 | 이 저장소 | MIT | `common` 의 `docs`, `develop_rule` 의 수렴과 투영 축, `msg_check`, `research_kit`, `refactoring_service` |
