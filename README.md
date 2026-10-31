@@ -4,7 +4,7 @@
 
 A curated collection of Claude Code skills, installable system-wide with a single command.
 
-[![skills](https://img.shields.io/badge/skills-7-8A2BE2?style=flat)](.claude/skills) [![contributors](https://img.shields.io/github/contributors/ash-hun/awesome_skills?style=flat&logo=github&color=blue)](https://github.com/ash-hun/awesome_skills/graphs/contributors) [![forks](https://img.shields.io/github/forks/ash-hun/awesome_skills?style=flat&logo=github&color=blue)](https://github.com/ash-hun/awesome_skills/network/members) [![stars](https://img.shields.io/github/stars/ash-hun/awesome_skills?style=flat&logo=github&color=yellow)](https://github.com/ash-hun/awesome_skills/stargazers) [![issues](https://img.shields.io/github/issues/ash-hun/awesome_skills?style=flat&logo=github&color=red)](https://github.com/ash-hun/awesome_skills/issues) [![last commit](https://img.shields.io/github/last-commit/ash-hun/awesome_skills?style=flat&logo=github)](https://github.com/ash-hun/awesome_skills/commits/main) [![license](https://img.shields.io/github/license/ash-hun/awesome_skills?style=flat&color=green)](LICENSE)
+[![skills](https://img.shields.io/badge/skills-6-8A2BE2?style=flat)](.claude/skills) [![contributors](https://img.shields.io/github/contributors/ash-hun/awesome_skills?style=flat&logo=github&color=blue)](https://github.com/ash-hun/awesome_skills/graphs/contributors) [![forks](https://img.shields.io/github/forks/ash-hun/awesome_skills?style=flat&logo=github&color=blue)](https://github.com/ash-hun/awesome_skills/network/members) [![stars](https://img.shields.io/github/stars/ash-hun/awesome_skills?style=flat&logo=github&color=yellow)](https://github.com/ash-hun/awesome_skills/stargazers) [![issues](https://img.shields.io/github/issues/ash-hun/awesome_skills?style=flat&logo=github&color=red)](https://github.com/ash-hun/awesome_skills/issues) [![last commit](https://img.shields.io/github/last-commit/ash-hun/awesome_skills?style=flat&logo=github)](https://github.com/ash-hun/awesome_skills/commits/main) [![license](https://img.shields.io/github/license/ash-hun/awesome_skills?style=flat&color=green)](LICENSE)
 
 </div>
 
@@ -90,13 +90,12 @@ awesome-skills brief on
 |---|---|---|---|
 | [`common`](.claude/skills/common/SKILL.md) | `/common [create\|eval\|describe\|docs]` | 스킬 자체를 만들고 검증하고 문서화하는 메타 스킬 | [anthropics/skills](https://github.com/anthropics/skills) + 이 저장소 |
 | [`humanism_talk`](.claude/skills/humanism_talk/SKILL.md) | `/humanism_talk [brief\|grill\|off]` | 대화 규율. 응답을 압축하고, 계획을 라운드로 캐묻는다 | [JuliusBrussee/caveman](https://github.com/JuliusBrussee/caveman) + [mattpocock/skills](https://github.com/mattpocock/skills) |
-| [`develop_rule`](.claude/skills/develop_rule/SKILL.md) | `/develop_rule [lite\|full\|ultra\|review\|audit\|debt\|spec\|handoff]` | 재현 가능한 개발. 최소로 짓고, 두 번 돌려도 같게, 문서는 코드에서 유도 | [DietrichGebert/ponytail](https://github.com/DietrichGebert/ponytail) + [mattpocock/skills](https://github.com/mattpocock/skills) + 이 저장소 |
+| [`dev_principle`](.claude/skills/dev_principle/SKILL.md) | `/dev_principle [refactor\|review\|audit\|debt\|docs\|handoff]` | 절대 개발 원칙. 기획, 아키텍처, 구현 순서와 코드, 테스트, 문서, 보안 규칙을 강제하고 리팩토링 모드를 포함한다 | [DietrichGebert/ponytail](https://github.com/DietrichGebert/ponytail) + [mattpocock/skills](https://github.com/mattpocock/skills) + [CodeGuard](https://github.com/cosai-oasis/project-codeguard) + [agamm/claude-code-owasp](https://github.com/agamm/claude-code-owasp) + 이 저장소 |
 | [`aar`](.claude/skills/aar/SKILL.md) | `/aar` | 끝난 작업을 네 질문으로 회고하고, 교훈을 다음 세션이 읽는 파일에 반영한다 | [coopersimson96/aar-loop](https://github.com/coopersimson96/aar-loop) + [neurofoo/agent-skills](https://github.com/neurofoo/agent-skills) |
 | [`msg_check`](.claude/skills/msg_check/SKILL.md) | `/msg_check` | 커밋, PR, 진행 보고 문안을 네 기준으로 검수하고 수정안을 낸다 | 이 저장소 |
 | [`research_kit`](.claude/skills/research_kit/SKILL.md) | `/research_kit` | AI 연구와 실험 키트. 조사, 설계, 실행과 로깅, 분석과 보고서를 잇는다 | 이 저장소 + Anthropic `deep-research` |
-| [`refactoring_service`](.claude/skills/refactoring_service/SKILL.md) | `/refactoring_service [설계문서 경로]` | 기존 서비스를 리팩토링하고 as-is 대비 to-be 변경 문서를 남긴다 | 이 저장소 |
 
-`refactoring_service` 는 명시 호출 전용이다. 나머지는 대화 문맥에서도 자동으로 잡힌다.
+모든 스킬이 대화 문맥에서도 자동으로 잡힌다.
 
 ## 스킬 상세
 
@@ -155,29 +154,35 @@ awesome-skills brief on
 </details>
 
 <details>
-<summary><code>develop_rule</code>: 재현 가능한 개발</summary>
+<summary><code>dev_principle</code>: 절대 개발 원칙</summary>
 
-같은 입력이면 같은 결과가 나와야 한다. 세 축으로 강제한다.
+코드를 짓고 고치는 모든 작업에 적용한다. "~ 만들거야" 같은 개발 착수 선언에 자동으로 켜진다. 옛 `develop_rule` 과 `refactoring_service` 를 합친 스킬이다.
 
-- **최소**: 안 지은 코드가 가장 재현 가능하다
-- **수렴**: 지은 것은 두 번 실행해도 같은 상태로 간다
-- **투영**: 문서는 코드에서 유도한다. 재생성해도 diff 가 없다
+1. 기획과 기능 정의(`docs/features.md` 초안)를 승인받는다
+2. 아키텍처(디렉토리 트리, 기능별 atomic 모듈과 파이프라인)를 승인받는다
+3. 하위 모듈을 구현한다. 이 단계에서는 묻지 않고 갈린 지점을 끝에 모아 보고한다
 
-지속 모드는 사다리를 탄다. 애초에 필요한가, 이미 코드베이스에 있나, 표준 라이브러리, 플랫폼 네이티브, 이미 설치된 의존성, 한 줄, 최소 구현 순으로 보고 처음 성립하는 칸에서 멈춘다. 강도는 `lite`, `full`(기본), `ultra`.
+| 영역 | 규칙 |
+|---|---|
+| 코드 | 층 구조와 단방향 의존, `<대상>_<역할>.py`, 길이순 import, 타입 힌트, 기능 단위 객체화(추상 클래스 금지), 최대 2줄 모듈 docstring, 멱등성, 패키지 관리는 uv, 환경 관리는 Docker Compose |
+| 로깅 | `common/logger.py` 의 structlog 커스텀 로거. 개발은 rich, 운영은 JSON, 비밀값 마스킹 |
+| 에이전트 | LangGraph 만. Deepagents 금지. checkpointer, `thread_id`, `recursion_limit` |
+| 테스트 | `tests/unit/test_{기능명}_{모듈명}.py`, `tests/integ/test_{기능명}.py`. 외부 API 는 항상 mock. 주석과 분량 최소 |
+| 문서 | `docs/features.md`, `docs/api_spec.md`, 화면이 있으면 `docs/view_spec.md`. 작업마다 갱신 |
+| 보안 | XSS, 인젝션, 비밀값, SSRF, 공급망, Docker, 프롬프트 인젝션 점검표 |
+| 크리티컬 포인트 | 작업마다 API 부하, 자원 점유, 보안, 구조 효율을 점검하고 보고 |
 
 | 단발 모드 | 하는 일 |
 |---|---|
-| `review` | 지금의 diff 에서 과잉설계 찾기 |
-| `audit` | 저장소 전체의 과잉설계를 삭제량 큰 순으로 |
-| `debt` | `ponytail:` 과 `idempotent:` 마커를 장부로 수집 |
-| `spec` | `docs/api-spec.md`, `docs/screen-spec.md` 생성과 갱신 |
+| `refactor [설계문서]` | 기존 서비스를 동작 변경 없이 리팩토링. 계획 승인, 특성 테스트, `docs/refactoring/` 변경 문서 |
+| `review`, `audit` | diff 또는 저장소 전체의 과잉설계 찾기 |
+| `debt` | `ponytail:` 과 `idempotent:` 마커 장부 |
+| `docs` | 문서 3종 생성과 갱신 |
 | `handoff` | 대화를 인수인계 문서로 압축 |
 
-단순화하지 않는 것: 신뢰 경계의 입력 검증, 데이터 손실을 막는 에러 처리, 보안, 접근성 기본, 사용자가 명시적으로 요청한 것. `review` 와 `audit` 은 복잡도만 보며 정확성, 보안, 성능은 범위 밖이다.
+처음 켤 때 원칙 카드를 프로젝트의 `CLAUDE.md` 에 마커로 고정한다. 예전 `develop_rule` 카드가 있으면 교체한다.
 
-처음 켤 때 원칙 카드를 프로젝트의 `CLAUDE.md` 에 마커로 고정한다.
-
-부속: `references/` 9개, `assets/` 3개.
+부속: `references/` 15개, `assets/` 6개(로거 템플릿 포함), `evals/`.
 
 </details>
 
@@ -221,42 +226,6 @@ LLM 평가, 비교대조 실험, 모델 학습, 새 가설 탐색을 네 단계�
 
 </details>
 
-<details>
-<summary><code>refactoring_service</code>: 서비스 리팩토링과 변경 문서</summary>
-
-이미 만들어진 서비스의 구조를 동작 변경 없이 바꾸고, 무엇을 왜 바꿨는지 문서로 남긴다. 설계문서 경로를 인자로 주면 그 문서대로, 주지 않으면 기본 방안(영속성 있는 운영 구조, 확장성을 고려한 구조)으로 간다.
-
-1. 방향 확정
-2. as-is 분석. 기존 테스트는 하나씩 읽고 의도를 정리한다
-3. 모듈별 계획을 보여주고 승인받는다. 승인 전에는 코드를 고치지 않는다
-4. 기존 테스트와 mypy 로 기준선을 잡고, 테스트가 없는 영역은 현재 동작을 고정하는 테스트를 먼저 쓴다
-5. 모듈 단위로 리팩토링하고 단위마다 테스트를 돌린다
-6. 전체 테스트, mypy, 의존 방향을 기준선과 비교한다
-7. 변경 문서를 쓴다
-
-손대는 Python 코드에는 항상 코드 규칙을 적용한다.
-
-| 규칙 | 내용 |
-|---|---|
-| 호출 계층과 모듈명 | 의존은 한 방향. import 경로만 읽고 역할을 알 수 있게 짓는다 |
-| 멱등성과 공통 모듈 | 재사용되는 것은 `common/` 으로. logger 는 반드시 공통 모듈 |
-| 타입 힌트 | 모든 함수의 인자와 반환값에 필수 |
-| 객체화와 상속 | 기능 관점의 추상화를 적극적으로. 추상 클래스는 가급적 쓰지 않고 상속 깊이 1에서 2 |
-| 파일 최상단 주석 | 전체 프로젝트 관점에서 이 모듈이 무엇인지 쓴다 |
-| 테스트 | `tests/unit/`(모듈별)과 `tests/integ/`(API 수준 시나리오 e2e). 둘 다 통과 |
-| 도구 | uv, pytest, mypy |
-| OpenAPI 문서 | FastAPI 기준. 기능 설명, 인자 설명, 사용 예제 |
-
-설계문서와 코드 규칙이 부딪히면 프로젝트 전체에서 해당 모듈까지 위에서 아래로 설명한 뒤 사용자에게 묻는다. 코드 규칙이 다루지 않는 판단은 `develop_rule` 을 따른다.
-
-변경 문서는 대상 서비스의 `docs/refactoring/YYYY-MM-DD-<서비스명>.md` 에 저장하고 구조는 개요, 리팩토링 내용(모듈별 전후 비교), 비고 및 특이사항으로 고정이다.
-
-범위 밖: 새 기능 추가, 버그 수정, 커밋과 푸시.
-
-부속: `references/` 2개, `assets/` 1개, `evals/`.
-
-</details>
-
 ## 디렉토리 구조
 
 ```
@@ -270,10 +239,9 @@ awesome_skills/
         ├── common/                # SKILL.md + references(5) + agents(3) + scripts(9) + assets(1) + eval-viewer
         ├── humanism_talk/         # SKILL.md + references(2) + README.md
         ├── aar/                   # SKILL.md + README.md + evals
-        ├── develop_rule/          # SKILL.md + references(9) + assets(3)
+        ├── dev_principle/         # SKILL.md + references(15) + assets(6) + evals
         ├── msg_check/             # SKILL.md + references(4) + evals
-        ├── research_kit/          # SKILL.md + references(5) + assets(3) + scripts(1) + evals
-        └── refactoring_service/   # SKILL.md + references(2) + assets(1) + evals
+        └── research_kit/          # SKILL.md + references(5) + assets(3) + scripts(1) + evals
 ```
 
 `.claude/settings.json` 에 활성화된 [obra/superpowers](https://github.com/obra/superpowers) 는 로컬 `SKILL.md` 가 아니라 플러그인이라 위 목록과 별개로 관리된다.
@@ -295,14 +263,18 @@ awesome_skills/
 | 출처 | 라이선스 | 흡수된 곳 |
 |---|---|---|
 | [anthropics/skills](https://github.com/anthropics/skills) `skill-creator` | Apache-2.0 ([전문](.claude/skills/common/LICENSE.txt)) | `common` 의 `create`, `eval`, `describe` |
-| [DietrichGebert/ponytail](https://github.com/DietrichGebert/ponytail) | MIT | `develop_rule` 의 최소 축, `review`, `audit`, `debt` |
+| [DietrichGebert/ponytail](https://github.com/DietrichGebert/ponytail) | MIT | `dev_principle` 의 최소 축, `review`, `audit`, `debt` |
 | [JuliusBrussee/caveman](https://github.com/JuliusBrussee/caveman) | MIT | `humanism_talk` 의 `brief` |
 | [coopersimson96/aar-loop](https://github.com/coopersimson96/aar-loop) | MIT | `aar` 의 네 질문, 교훈 기준, 수정 계획 절차. 기록 스크립트는 옮기지 않음 |
 | [neurofoo/agent-skills](https://github.com/neurofoo/agent-skills) | MIT | `aar` 의 유지와 개선 구분, `humanism_talk` 의 `grill` premortem |
 | [dvy1987/agent-loom](https://github.com/dvy1987/agent-loom) `ooda` | MIT | `humanism_talk` 의 `brief` 가역성 표시와 재검토 조건 |
-| [mattpocock/skills](https://github.com/mattpocock/skills) | MIT | `humanism_talk` 의 `grill`, `develop_rule` 의 `handoff` |
+| [mattpocock/skills](https://github.com/mattpocock/skills) | MIT | `humanism_talk` 의 `grill`, `dev_principle` 의 `handoff` |
+| [cosai-oasis/project-codeguard](https://github.com/cosai-oasis/project-codeguard) | CC-BY-4.0 | `dev_principle` 의 보안 점검표 |
+| [agamm/claude-code-owasp](https://github.com/agamm/claude-code-owasp) | MIT | `dev_principle` 의 보안 점검표(OWASP, LLM) |
+| [OpenSSF AI Code Assistant 가이드](https://best.openssf.org/Security-Focused-Guide-for-AI-Code-Assistant-Instructions) | Apache-2.0 | `dev_principle` 의 보안 점검표 |
+| [OWASP Cheat Sheet Series](https://github.com/OWASP/CheatSheetSeries) | CC-BY-SA-4.0 | `dev_principle` 의 에이전트 보안 항목. 원문을 옮기지 않고 다시 씀 |
 | Anthropic `deep-research` 스킬 (Claude 내장) | 미확인 | `research_kit` 의 full 조사 절차. 원문을 옮기지 않고 다시 씀 |
-| 이 저장소 | MIT | `common` 의 `docs`, `develop_rule` 의 수렴과 투영 축, `msg_check`, `research_kit`, `refactoring_service` |
+| 이 저장소 | MIT | `common` 의 `docs`, `dev_principle` 의 수렴과 투영 축, 리팩토링, 테스트와 문서 규칙, `msg_check`, `research_kit` |
 
 ponytail 의 `ponytail-help` 와 `ponytail-gain` 은 옮기지 않았다. 필요하면 원본 저장소를 쓴다.
 <!-- skills:end -->

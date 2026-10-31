@@ -1,6 +1,6 @@
 # 인수인계 문서
 
-`develop_rule` 스킬의 참조 문서. `/develop_rule handoff` 로 들어온다.
+`dev_principle` 스킬의 참조 문서. `/dev_principle handoff` 로 들어온다.
 
 ---
 
