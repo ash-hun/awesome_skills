@@ -119,7 +119,9 @@ Agent(
   subagent_type="general-purpose",
   run_in_background=false,
   description="<3-5 단어>",
-  prompt="<하위 주제>에 대한 선행 연구를 조사한다.
+  prompt="도구 호출 상한 15회. 15회째가 끝나면 더 찾지 않고 노트를 쓴다.
+
+<하위 주제>에 대한 선행 연구를 조사한다.
 
 검증하려는 가설: <hypothesis.md 의 가설 한 문장>
 
@@ -136,8 +138,6 @@ Agent(
 - <원 요청의 범위. 기간, 모델 규모, 과제>
 
 노트를 {research_dir}/notes/<topic>.md 에 저장한다.
-
-도구 호출 상한은 15회다. 상한에 닿으면 더 찾지 않고 지금까지 찾은 것으로 노트를 쓴다.
 
 **가장 먼저 {skill_dir}/references/survey-researcher.md 를 읽고 그 지시를 따른다.**"
 )
