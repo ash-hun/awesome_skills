@@ -93,7 +93,7 @@ awesome-skills brief on
 | [`dev_principle`](.claude/skills/dev_principle/SKILL.md) | `/dev_principle [refactor\|review\|audit\|debt\|docs\|handoff]` | 절대 개발 원칙. 기획, 아키텍처, 구현 순서와 코드, 테스트, 문서, 보안 규칙을 강제하고 리팩토링 모드를 포함한다 | [DietrichGebert/ponytail](https://github.com/DietrichGebert/ponytail) + [mattpocock/skills](https://github.com/mattpocock/skills) + [CodeGuard](https://github.com/cosai-oasis/project-codeguard) + [agamm/claude-code-owasp](https://github.com/agamm/claude-code-owasp) + 이 저장소 |
 | [`aar`](.claude/skills/aar/SKILL.md) | `/aar` | 끝난 작업을 네 질문으로 회고하고, 교훈을 다음 세션이 읽는 파일에 반영한다 | [coopersimson96/aar-loop](https://github.com/coopersimson96/aar-loop) + [neurofoo/agent-skills](https://github.com/neurofoo/agent-skills) |
 | [`msg_check`](.claude/skills/msg_check/SKILL.md) | `/msg_check` | 커밋, PR, 진행 보고 문안을 네 기준으로 검수하고 수정안을 낸다 | 이 저장소 |
-| [`research_kit`](.claude/skills/research_kit/SKILL.md) | `/research_kit` | AI 연구와 실험 키트. 조사, 설계, 실행과 로깅, 분석과 보고서를 잇는다 | 이 저장소 + Anthropic `deep-research` |
+| [`research_kit`](.claude/skills/research_kit/SKILL.md) | `/research_kit` | 가설 하나를 조사, 설계, 검증, 평가, 판단 다섯 단계로 확인하고 고정 템플릿의 실험 보고서를 낸다 | 이 저장소 + Anthropic `deep-research` |
 
 모든 스킬이 대화 문맥에서도 자동으로 잡힌다.
 
@@ -207,22 +207,19 @@ awesome-skills brief on
 </details>
 
 <details>
-<summary><code>research_kit</code>: AI 연구와 실험 키트</summary>
+<summary><code>research_kit</code>: 가설 하나를 실험으로 검증하는 키트</summary>
 
-LLM 평가, 비교대조 실험, 모델 학습, 새 가설 탐색을 네 단계로 다룬다. 사용자가 있는 단계부터 시작하고 산출물은 `research/<slug>/` 에 모은다.
+가설을 입력으로 받아 다섯 단계를 거치고, "이 결과를 본 연구에 쓸 수 있는가"에 답한다. 사용자가 있는 단계부터 시작하고 산출물은 `research/<slug>/` 에 모은다. 연구 하나 아래 실험이 여러 개 달리고 보고서는 연구 단위로 하나다.
 
 | 단계 | 산출물 | 핵심 |
 |---|---|---|
-| 질문과 선행 조사 | `survey.md` | light(기본, 직접 검색) 또는 full(조사 서브에이전트 병렬) |
-| 가설과 실험 설계 | `design.md` | 반증 가능한 가설, 한 번에 한 변수, 판정 기준을 실행 전에 숫자로 |
-| 실행과 로깅 | `runs/<run-id>/card.md` | config, git hash, seed, 환경을 실험 카드에 기록 |
-| 분석과 보고서 | `analysis.md`, `report.md` | 쌍체 bootstrap, McNemar. 지지, 기각, 판정 불가로 판정 |
+| 조사 | `survey.md` | 가설을 지지하거나 반박하는 보고, 가져다 쓸 자원, 동향, 방향 제안. light(기본, 직접 검색) 또는 full(조사 서브에이전트 병렬) |
+| 설계 | `design.md` | 실험 목록(목표 한 문장, 바꾸는 것 하나, 고정하는 것), 평가 기준마다 출력 형식, 산출 규칙, 신뢰 근거 한 줄, 임계값 |
+| 검증 | `experiments/<exp-id>/` | 모듈 또는 노트북, seed 고정, 진행바, 항목 단위 `metrics.jsonl`, 실행 카드, figure |
+| 평가 | `evaluation.md` | 설계한 기준을 그대로 적용. 기준이 정확히 충족되지 않으면 멈추고 사용자 확인. seed 분산 표기, 통계 검정 없음 |
+| 판단 | `decision.md`, `report.md` | 채택, 조건부 채택, 기각, 판정 불가. 보고서는 metainfo 표, 개요, 실험내용(목표, 변인 통제, 결과와 figure, 결론), 결론 고정 템플릿 |
 
-숫자는 실행 결과나 출처 있는 문헌에서만 나온다.
-
-범위 밖: 연구와 무관한 웹 조사, 논문 원고 조판, 학습 인프라 구축.
-
-부속: `references/` 5개, `assets/` 3개, `scripts/snapshot_env.sh`, `evals/`.
+가설 수립은 범위 밖이다. 숫자는 실행 결과나 출처 있는 문헌에서만 나온다.
 
 </details>
 
@@ -241,7 +238,7 @@ awesome_skills/
         ├── aar/                   # SKILL.md + README.md + evals
         ├── dev_principle/         # SKILL.md + references(15) + assets(6) + evals
         ├── msg_check/             # SKILL.md + references(4) + evals
-        └── research_kit/          # SKILL.md + references(5) + assets(3) + scripts(1) + evals
+        └── research_kit/          # SKILL.md + references(6) + assets(7) + scripts(1) + evals
 ```
 
 `.claude/settings.json` 에 활성화된 [obra/superpowers](https://github.com/obra/superpowers) 는 로컬 `SKILL.md` 가 아니라 플러그인이라 위 목록과 별개로 관리된다.

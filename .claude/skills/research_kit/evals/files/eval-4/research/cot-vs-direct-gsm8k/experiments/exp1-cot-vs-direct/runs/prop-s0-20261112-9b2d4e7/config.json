@@ -1,0 +1,19 @@
+{
+  "condition_id": "prop",
+  "model": "Qwen/Qwen2.5-7B-Instruct",
+  "prompt": {
+    "system": "Think step by step, then give the final number in the form '#### <number>'.",
+    "shots": 8,
+    "answer_format": "#### <number>"
+  },
+  "decoding": {
+    "temperature": 0.7,
+    "top_p": 0.9,
+    "max_tokens": 512,
+    "stop": [
+      "\n\n\n"
+    ],
+    "seed": 0
+  },
+  "data": "data/gsm8k_test_500.jsonl"
+}

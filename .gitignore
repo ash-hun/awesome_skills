@@ -216,3 +216,6 @@ __marimo__/
 
 # Streamlit
 .streamlit/secrets.toml
+
+# common 스킬의 eval 워크스페이스 (실행 산출물, 커밋하지 않음)
+.claude/skills/*-workspace/
